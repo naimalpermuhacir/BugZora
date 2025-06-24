@@ -1,0 +1,77 @@
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+
+archives:
+  - format: tar.gz
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - README.md
+      - README_tr.md
+      - LICENSE
+      - install.sh
+      - install.bat
+      - install.ps1
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^ci:'
+      - Merge pull request
+      - Merge branch
+
+brews:
+  - name: bugzora
+    homepage: "https://github.com/bugzora/bugzora"
+    description: "A powerful security scanning tool for container images and filesystems"
+    repository:
+      owner: bugzora
+      name: homebrew-tap
+    commit_author:
+      name: BugZora Bot
+      email: bot@bugzora.dev
+    goarm: "6"
+
+nfpms:
+  - maintainer: "BugZora <bugzora@bugzora.dev>"
+    description: "A powerful security scanning tool for container images and filesystems"
+    homepage: "https://github.com/bugzora/bugzora"
+    license: "MIT"
+    formats:
+      - deb
+      - rpm
+    bindir: /usr/bin
+    scripts:
+      postinstall: scripts/postinstall.sh 
