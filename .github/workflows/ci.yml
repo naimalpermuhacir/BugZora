@@ -3,6 +3,8 @@ name: CI/CD Pipeline
 on:
   push:
     branches: [ master ]
+    tags:
+      - 'v*'
   pull_request:
     branches: [ master ]
   release:
@@ -88,7 +90,6 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     needs: [test, build, security-scan]
-    if: github.event_name == 'release' && github.event.action == 'published'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
