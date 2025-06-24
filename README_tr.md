@@ -26,10 +26,10 @@ Bu uygulama, konteyner imajları ve dosya sistemlerini tarayarak güvenlik açı
 #### Linux & macOS
 ```bash
 # Kurulum scriptini indir ve çalıştır
-curl -fsSL https://raw.githubusercontent.com/naimalpermuhacir/BugZora/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/naimalpermuhacir/BugZora/master/install.sh | bash
 
 # Veya önce indir, sonra çalıştır
-wget https://raw.githubusercontent.com/naimalpermuhacir/BugZora/main/install.sh
+wget https://raw.githubusercontent.com/naimalpermuhacir/BugZora/master/install.sh
 chmod +x install.sh
 ./install.sh
 ```
@@ -37,7 +37,7 @@ chmod +x install.sh
 #### Windows
 ```cmd
 # PowerShell kullanarak (önerilen)
-powershell -ExecutionPolicy Bypass -Command "Invoke-Expression (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/naimalpermuhacir/BugZora/main/install.ps1').Content"
+powershell -ExecutionPolicy Bypass -Command "Invoke-Expression (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/naimalpermuhacir/BugZora/master/install.ps1').Content"
 
 # Veya manuel olarak indir ve çalıştır
 # 1. install.ps1 dosyasını indir
