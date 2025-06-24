@@ -1,3 +1,4 @@
+<!-- CI debug adımı testi için dummy değişiklik -->
 # BugZora
 
 A comprehensive security scanning tool for container images and filesystems, built with Go.

@@ -48,7 +48,8 @@ func PrintTable(target string, results types.Results) {
 	fmt.Println("Legend:")
 	fmt.Println("'-': Not scanned")
 	fmt.Println("'0': Clean (no security findings detected)")
-	fmt.Println("\n\n") // Report Summary'den sonra iki satır boşluk
+	fmt.Println()
+	fmt.Println() // Report Summary'den sonra iki satır boşluk
 
 	fmt.Printf("\n--- Vulnerability Scan Report for: %s ---\n", target)
 
@@ -58,7 +59,8 @@ func PrintTable(target string, results types.Results) {
 			continue
 		}
 		if !first {
-			fmt.Println("\n\n") // İki satır boşluk
+			fmt.Println()
+			fmt.Println()
 		}
 		printSingleResultTable(result)
 		first = false
