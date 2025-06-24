@@ -1,8 +1,14 @@
-# BugZora - Security Scanning Application
+# BugZora
 
-Copyright © 2025 BugZora <bugzora@bugzora.dev>
+A comprehensive security scanning tool for container images and filesystems, built with Go.
 
-**BugZora** is a powerful and modern vulnerability scanner that leverages the industry-standard Trivy engine to provide comprehensive security analysis of container images and filesystems. Built with Go and featuring a beautiful CLI interface, BugZora offers multiple output formats and detailed vulnerability reporting.
+## Features
+
+- **Container Image Scanning**: Scan Docker images for vulnerabilities
+- **Filesystem Scanning**: Scan local filesystems for security issues
+- **Multiple Output Formats**: JSON, PDF, and colored table output
+- **Cross-Platform Support**: Linux, macOS, and Windows
+- **Automated CI/CD**: GitHub Actions integration with security scanning
 
 ## 🚀 Features
 
