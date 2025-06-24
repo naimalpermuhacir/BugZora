@@ -29,7 +29,7 @@ echo [INFO] Detected architecture: %ARCH%
 
 REM Get latest version
 echo [INFO] Fetching latest version...
-for /f "tokens=*" %%i in ('powershell -Command "(Invoke-RestMethod -Uri 'https://api.github.com/repos/bugzora/bugzora/releases/latest').tag_name"') do set VERSION=%%i
+for /f "tokens=*" %%i in ('powershell -Command "(Invoke-RestMethod -Uri 'https://api.github.com/repos/naimalpermuhacir/BugZora/releases/latest').tag_name"') do set VERSION=%%i
 
 if "%VERSION%"=="" (
     echo [WARNING] Could not fetch latest version, using v1.3.0
@@ -44,7 +44,7 @@ mkdir "%TEMP_DIR%"
 cd /d "%TEMP_DIR%"
 
 REM Download BugZora
-set DOWNLOAD_URL=https://github.com/bugzora/bugzora/releases/download/%VERSION%/bugzora_Windows_%ARCH%.zip
+set DOWNLOAD_URL=https://github.com/naimalpermuhacir/BugZora/releases/download/%VERSION%/bugzora_Windows_%ARCH%.zip
 echo [INFO] Downloading BugZora from: %DOWNLOAD_URL%
 
 powershell -Command "& {Invoke-WebRequest -Uri '%DOWNLOAD_URL%' -OutFile 'bugzora.zip'}"

@@ -26,10 +26,10 @@ Copyright © 2025 BugZora <bugzora@bugzora.dev>
 #### Linux & macOS
 ```bash
 # Download and run the installation script
-curl -fsSL https://raw.githubusercontent.com/bugzora/bugzora/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/naimalpermuhacir/BugZora/main/install.sh | bash
 
 # Or download first, then run
-wget https://raw.githubusercontent.com/bugzora/bugzora/main/install.sh
+wget https://raw.githubusercontent.com/naimalpermuhacir/BugZora/main/install.sh
 chmod +x install.sh
 ./install.sh
 ```
@@ -37,7 +37,7 @@ chmod +x install.sh
 #### Windows
 ```cmd
 # Using PowerShell (recommended)
-powershell -ExecutionPolicy Bypass -Command "Invoke-Expression (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/bugzora/bugzora/main/install.ps1').Content"
+powershell -ExecutionPolicy Bypass -Command "Invoke-Expression (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/naimalpermuhacir/BugZora/main/install.ps1').Content"
 
 # Or download and run manually
 # 1. Download install.ps1
@@ -84,8 +84,8 @@ powershell -ExecutionPolicy Bypass -Command "Invoke-Expression (Invoke-WebReques
 
 2. **Install BugZora**:
    ```bash
-   git clone https://github.com/bugzora/bugzora.git
-   cd bugzora
+   git clone https://github.com/naimalpermuhacir/BugZora.git
+   cd BugZora
    go mod download
    go build -o bugzora .
    ```

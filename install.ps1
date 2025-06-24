@@ -48,7 +48,7 @@ Write-Status "Detected architecture: $arch"
 if (-not $Version) {
     Write-Status "Fetching latest version..."
     try {
-        $response = Invoke-RestMethod -Uri "https://api.github.com/repos/bugzora/bugzora/releases/latest"
+        $response = Invoke-RestMethod -Uri "https://api.github.com/repos/naimalpermuhacir/BugZora/releases/latest"
         $Version = $response.tag_name
     } catch {
         Write-Warning "Could not fetch latest version, using v1.3.0"
@@ -65,7 +65,7 @@ Set-Location $tempDir
 
 try {
     # Download BugZora
-    $downloadUrl = "https://github.com/bugzora/bugzora/releases/download/$Version/bugzora_Windows_$arch.zip"
+    $downloadUrl = "https://github.com/naimalpermuhacir/BugZora/releases/download/$Version/bugzora_Windows_$arch.zip"
     Write-Status "Downloading BugZora from: $downloadUrl"
     
     Invoke-WebRequest -Uri $downloadUrl -OutFile "bugzora.zip"

@@ -53,7 +53,7 @@ detect_system() {
 # Get latest version from GitHub
 get_latest_version() {
     print_status "Fetching latest version..."
-    VERSION=$(curl -s https://api.github.com/repos/bugzora/bugzora/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+    VERSION=$(curl -s https://api.github.com/repos/naimalpermuhacir/BugZora/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
     
     if [ -z "$VERSION" ]; then
         print_warning "Could not fetch latest version, using v1.3.0"
@@ -65,7 +65,7 @@ get_latest_version() {
 
 # Download BugZora
 download_bugzora() {
-    local download_url="https://github.com/bugzora/bugzora/releases/download/$VERSION/bugzora_${OS^}_${ARCH}.tar.gz"
+    local download_url="https://github.com/naimalpermuhacir/BugZora/releases/download/$VERSION/bugzora_${OS^}_${ARCH}.tar.gz"
     
     print_status "Downloading BugZora from: $download_url"
     
