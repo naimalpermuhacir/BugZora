@@ -2,11 +2,11 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, staging, release/* ]
     tags:
       - 'v*'
   pull_request:
-    branches: [ master ]
+    branches: [ master, staging, release/* ]
   release:
     types: [ published ]
 
