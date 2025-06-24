@@ -47,6 +47,19 @@ detect_system() {
             ;;
     esac
     
+    # Convert OS name to proper case for download URL
+    case $OS in
+        linux)
+            OS_NAME="Linux"
+            ;;
+        darwin)
+            OS_NAME="Darwin"
+            ;;
+        *)
+            OS_NAME="Linux"
+            ;;
+    esac
+    
     print_status "Detected system: $OS $ARCH"
 }
 
@@ -65,7 +78,7 @@ get_latest_version() {
 
 # Download BugZora
 download_bugzora() {
-    local download_url="https://github.com/naimalpermuhacir/BugZora/releases/download/$VERSION/bugzora_${OS^}_${ARCH}.tar.gz"
+    local download_url="https://github.com/naimalpermuhacir/BugZora/releases/download/$VERSION/bugzora_${OS_NAME}_${ARCH}.tar.gz"
     
     print_status "Downloading BugZora from: $download_url"
     
