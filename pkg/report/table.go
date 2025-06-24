@@ -17,13 +17,51 @@ func PrintTable(target string, results types.Results) {
 		fmt.Printf("✅ No vulnerabilities found for %s\n", target)
 		return
 	}
+
+	// --- Report Summary ---
+	fmt.Println("\nReport Summary")
+	summaryTable := tablewriter.NewWriter(os.Stdout)
+	summaryTable.SetHeader([]string{
+		color.New(color.Bold).Sprint("Target"),
+		color.New(color.Bold).Sprint("Type"),
+		color.New(color.Bold).Sprint("Vulnerabilities"),
+		color.New(color.Bold).Sprint("Secrets"),
+	})
+	summaryTable.SetAutoWrapText(false)
+	summaryTable.SetRowLine(true)
+
+	for _, result := range results {
+		vulnCount := len(result.Vulnerabilities)
+		secrets := "-"
+		if result.Secrets != nil {
+			secrets = fmt.Sprintf("%d", len(result.Secrets))
+		}
+		row := []string{
+			result.Target,
+			string(result.Type),
+			fmt.Sprintf("%d", vulnCount),
+			secrets,
+		}
+		summaryTable.Append(row)
+	}
+	summaryTable.Render()
+	fmt.Println("Legend:")
+	fmt.Println("'-': Not scanned")
+	fmt.Println("'0': Clean (no security findings detected)")
+	fmt.Println("\n\n") // Report Summary'den sonra iki satır boşluk
+
 	fmt.Printf("\n--- Vulnerability Scan Report for: %s ---\n", target)
 
+	first := true
 	for _, result := range results {
 		if len(result.Vulnerabilities) == 0 {
 			continue
 		}
+		if !first {
+			fmt.Println("\n\n") // İki satır boşluk
+		}
 		printSingleResultTable(result)
+		first = false
 	}
 }
 
@@ -33,7 +71,15 @@ func printSingleResultTable(result types.Result) {
 	fmt.Println(header)
 
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"Package", "Vulnerability ID", "Severity", "Installed Ver.", "Fixed Ver.", "Title", "Reference"})
+	table.SetHeader([]string{
+		color.New(color.Bold).Sprint("Package"),
+		color.New(color.Bold).Sprint("Vulnerability ID"),
+		color.New(color.Bold).Sprint("Severity"),
+		color.New(color.Bold).Sprint("Installed Ver."),
+		color.New(color.Bold).Sprint("Fixed Ver."),
+		color.New(color.Bold).Sprint("Title"),
+		color.New(color.Bold).Sprint("Reference"),
+	})
 	table.SetAutoWrapText(true) // Enable text wrapping for long titles/links
 	table.SetRowLine(true)
 
@@ -168,7 +214,7 @@ func renderSummary(counts map[string]int) string {
 		}
 	}
 
-	return fmt.Sprintf("Summary: Total: %d (%s)", total, strings.Join(summaryParts, ", "))
+	return color.New(color.Bold).Sprintf("Summary: Total: %d (%s)", total, strings.Join(summaryParts, ", "))
 }
 
 func colorizeSeverityCount(severity string, count int) string {
