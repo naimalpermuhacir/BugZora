@@ -1,3 +1,4 @@
+// Package cmd provides command-line interface for BugZora security scanner
 /*
 Copyright © 2025 BugZora <bugzora@bugzora.dev>
 */
