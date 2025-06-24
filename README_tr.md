@@ -13,6 +13,10 @@ Bu uygulama, konteyner imajları ve dosya sistemlerini tarayarak güvenlik açı
 - **Çoklu Referans Sistemi**: Her zafiyet için kapsamlı referans linkleri
 - **Renkli Terminal Çıktısı**: Okunabilir ve profesyonel tablo formatı
 - **Detaylı Raporlama**: Zafiyet istatistikleri ve metadata
+- **Yeni Stil Rapor Özeti**: Terminal çıktısının başında hızlı genel bakış için özet tablo.
+- **Kalın Tablo Başlıkları & Özet**: Tablo başlıkları ve özet satırları daha okunaklı olması için kalın.
+- **Tablolar Arası Ekstra Boşluk**: Terminalde farklı tablo geçişleri daha belirgin.
+- **Açıklamalı Legend Alanı**: Tablo sembollerinin anlamı için açıklama.
 
 ## 📋 Gereksinimler
 
@@ -251,7 +255,7 @@ Raporlar aşağıdaki isimlendirme kuralıyla oluşturulur:
 
 ### Proje Yapısı
 ```
-guvenlik-app/
+BugZora/
 ├── cmd/           # CLI komutları
 ├── pkg/           # Ana paketler
 │   ├── report/    # Raporlama modülü

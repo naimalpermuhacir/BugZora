@@ -9,6 +9,10 @@ A comprehensive security scanning tool for container images and filesystems, bui
 - **Multiple Output Formats**: JSON, PDF, and colored table output
 - **Cross-Platform Support**: Linux, macOS, and Windows
 - **Automated CI/CD**: GitHub Actions integration with security scanning
+- **Modern Report Summary**: A summary table at the top of the terminal output for quick overview.
+- **Bold Table Headers & Summary**: Table headers and summary lines are bold for better readability.
+- **Extra Spacing Between Tables**: Visually clear separation between different result tables in terminal output.
+- **Legend Section**: Explains table symbols for clarity.
 
 ## 🚀 Features
 
@@ -257,7 +261,7 @@ Examples:
 
 ### Project Structure
 ```
-guvenlik-app/
+BugZora/
 ├── cmd/           # CLI commands
 ├── pkg/           # Main packages
 │   ├── report/    # Reporting module
