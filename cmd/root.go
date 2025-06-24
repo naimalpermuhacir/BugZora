@@ -5,9 +5,17 @@ Copyright © 2025 BugZora <bugzora@bugzora.dev>
 package cmd
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
+)
+
+// Version information - set by GoReleaser
+var (
+	version = "dev"
+	commit  = "unknown"
+	date    = "unknown"
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -29,6 +37,7 @@ Examples:
   bugzora fs /path/to/filesystem
   bugzora image alpine:latest --output json
   bugzora fs ./my-app --output pdf`,
+	Version: fmt.Sprintf("%s (commit: %s, date: %s)", version, commit, date),
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
