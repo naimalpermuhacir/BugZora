@@ -31,11 +31,15 @@ RUN apk add --no-cache \
     tzdata \
     wget \
     curl \
+    tar \
     && rm -rf /var/cache/apk/*
 
-# Install Trivy
-RUN wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | \
-    apk add --no-cache --repository https://aquasecurity.github.io/trivy-repo/deb/ trivy
+# Install Trivy (latest release)
+ENV TRIVY_VERSION=0.51.1
+RUN wget -O /tmp/trivy.tar.gz https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz \
+    && tar -xzf /tmp/trivy.tar.gz -C /usr/local/bin trivy \
+    && chmod +x /usr/local/bin/trivy \
+    && rm /tmp/trivy.tar.gz
 
 # Create non-root user
 RUN addgroup -g 1000 bugzora && \

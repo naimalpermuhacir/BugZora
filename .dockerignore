@@ -67,7 +67,6 @@ db/
 *.db
 
 # Go cache
-go.sum
 vendor/
 
 # Environment files
