@@ -18,7 +18,6 @@ func PrintTable(target string, results types.Results) {
 		return
 	}
 
-	// --- Report Summary ---
 	fmt.Println("\nReport Summary")
 	summaryTable := tablewriter.NewWriter(os.Stdout)
 	summaryTable.SetHeader([]string{
@@ -49,7 +48,7 @@ func PrintTable(target string, results types.Results) {
 	fmt.Println("'-': Not scanned")
 	fmt.Println("'0': Clean (no security findings detected)")
 	fmt.Println()
-	fmt.Println() // Report Summary'den sonra iki satır boşluk
+	fmt.Println()
 
 	fmt.Printf("\n--- Vulnerability Scan Report for: %s ---\n", target)
 

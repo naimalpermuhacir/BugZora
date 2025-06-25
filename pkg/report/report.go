@@ -14,7 +14,6 @@ import (
 
 // WriteResults takes the scan results and outputs them in the specified format.
 func WriteResults(results types.Results, format string, outputTarget string) error {
-	// Sanitize the outputTarget to create a valid filename
 	sanitizedTarget := strings.ReplaceAll(outputTarget, "/", "_")
 	sanitizedTarget = strings.ReplaceAll(sanitizedTarget, ":", "-")
 	outputFileNameBase := "report-" + sanitizedTarget

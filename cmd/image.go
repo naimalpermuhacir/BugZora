@@ -11,8 +11,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"bugzora/pkg/report" // We might need this for severity filtering later
-	"bugzora/pkg/vuln"   // Even though trivy handles image scanning, we keep the same entrypoint
+	"bugzora/pkg/report"
+	"bugzora/pkg/vuln"
 )
 
 var imageCmd = &cobra.Command{
@@ -25,14 +25,12 @@ var imageCmd = &cobra.Command{
 		output, _ := cmd.Flags().GetString("output")
 		quiet, _ := cmd.Flags().GetBool("quiet")
 
-		// Call the scanner function which wraps the trivy CLI.
 		log.Printf("Scanning image: %s... (this might take a while)", imageName)
 		scanReport, err := vuln.ScanImage(context.Background(), imageName, quiet)
 		if err != nil {
 			log.Fatalf("Image scan error: %v", err)
 		}
 
-		// Pass the results from the report to our reporting function.
 		if err := report.WriteResults(scanReport.Results, output, imageName); err != nil {
 			log.Fatalf("Failed to write report: %v", err)
 		}

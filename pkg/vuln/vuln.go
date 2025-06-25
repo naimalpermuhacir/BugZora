@@ -10,8 +10,7 @@ import (
 	"golang.org/x/xerrors"
 )
 
-// runTrivyCommand executes the trivy CLI command with the given arguments
-// and captures its JSON output.
+// runTrivyCommand executes the trivy CLI command with the given arguments and captures its JSON output.
 func runTrivyCommand(ctx context.Context, args ...string) (types.Report, error) {
 	var report types.Report
 

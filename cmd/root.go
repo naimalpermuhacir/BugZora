@@ -38,9 +38,6 @@ Examples:
   bugzora image alpine:latest --output json
   bugzora fs ./my-app --output pdf`,
 	Version: fmt.Sprintf("%s (commit: %s, date: %s)", version, commit, date),
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
