@@ -6,17 +6,10 @@ services:
     image: bugzora:latest
     container_name: bugzora-scanner
     volumes:
-      # Mount current directory for scanning filesystems
       - .:/scan-target:ro
-      # Mount Docker socket for scanning Docker images (optional)
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
-      # Set timezone
       - TZ=UTC
-    # Example commands:
-    # For help: docker-compose run bugzora --help
-    # For image scan: docker-compose run bugzora image ubuntu:20.04
-    # For filesystem scan: docker-compose run bugzora fs /scan-target
     command: ["--help"]
     restart: unless-stopped
     security_opt:
