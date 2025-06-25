@@ -1,0 +1,48 @@
+# Git files
+.git
+.gitignore
+
+# Build artifacts
+bugzora
+dist/
+build/
+
+# Test files
+test-fs/
+*.test
+
+# Report files
+report-*.json
+report-*.pdf
+
+# Documentation
+README.md
+README_tr.md
+PROJECT_STATE.md
+
+# CI/CD files
+.github/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Trivy cache
+.trivy/
+/tmp/.trivy-cache/
+db/trivy.db
+db/metadata.json
+
+# Installation scripts
+install.sh
+install.bat
+install.ps1 
