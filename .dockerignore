@@ -1,48 +1,86 @@
-# Git files
+# Git
 .git
 .gitignore
-
-# Build artifacts
-bugzora
-dist/
-build/
-
-# Test files
-test-fs/
-*.test
-
-# Report files
-report-*.json
-report-*.pdf
+.gitattributes
 
 # Documentation
 README.md
 README_tr.md
+DOCKER.md
 PROJECT_STATE.md
+LICENSE
 
-# CI/CD files
-.github/
+# Build artifacts
+bugzora
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test files
+*_test.go
+test-fs/
+*.test
+
+# Reports
+report-*.json
+report-*.pdf
+*.json
+*.pdf
 
 # IDE files
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
 
 # OS files
 .DS_Store
 Thumbs.db
 
-# Temporary files
-*.tmp
-*.temp
+# Logs
 *.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Docker files
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# CI/CD
+.github/
+.goreleaser.yml
+
+# Installation scripts
+install.sh
+install.ps1
+install.bat
+
+# Database files
+db/
+*.db
+
+# Go cache
+go.sum
+vendor/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Backup files
+*.bak
+*.backup
 
 # Trivy cache
 .trivy/
 /tmp/.trivy-cache/
 db/trivy.db
-db/metadata.json
-
-# Installation scripts
-install.sh
-install.bat
-install.ps1 
+db/metadata.json 
