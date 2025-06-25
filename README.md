@@ -10,18 +10,35 @@ A comprehensive security scanning tool for container images and filesystems, bui
 - **Multiple Output Formats**: JSON, PDF, and colored table output
 - **Cross-Platform Support**: Linux, macOS, and Windows
 - **Docker Support**: Containerized deployment with multi-stage builds
+- **Multi-Architecture Support**: Build and run on amd64, arm64, arm/v7
 - **Automated CI/CD**: GitHub Actions integration with security scanning
 - **Modern Report Summary**: A summary table at the top of the terminal output for quick overview
 - **Bold Table Headers & Summary**: Table headers and summary lines are bold for better readability
 - **Extra Spacing Between Tables**: Visually clear separation between different result tables in terminal output
 - **Legend Section**: Explains table symbols for clarity
 - **Multi-Reference System**: Comprehensive reference links for each vulnerability
+- **Security Hardening**: Non-root user, read-only filesystem, dropped capabilities, health checks
+
+## 🐳 Docker Optimizations & Security
+
+- **Multi-stage build**: Small, production-ready images
+- **Alpine Linux base**: Minimal and secure
+- **Trivy installation**: Latest release, direct from GitHub
+- **Non-root user**: Container runs as UID 1000
+- **Read-only root filesystem**: Enhanced security
+- **Dropped capabilities**: Only essential Linux capabilities enabled
+- **Health checks**: Dockerfile and Compose healthcheck support
+- **Resource limits**: Memory and CPU limits in Compose
+- **Volume caching**: Trivy cache for faster scans
+- **Proper labels**: OCI and Docker metadata
+- **Multi-arch build script**: `build-docker.sh` for amd64, arm64, arm/v7
+- **Security scan script**: `docker-security-scan.sh` for automated vulnerability/config/secret scan
 
 ## 📋 Requirements
 
-- Trivy CLI tool (automatically installed by installation scripts)
+- Trivy CLI tool (automatically installed by installation scripts or Docker)
 - Internet connection (for database updates)
-- Docker (optional, for containerized usage)
+- Docker (for containerized usage)
 
 ## 🛠️ Installation
 
@@ -29,87 +46,47 @@ A comprehensive security scanning tool for container images and filesystems, bui
 
 #### Linux & macOS
 ```bash
-# Download and run the installation script
 curl -fsSL https://raw.githubusercontent.com/naimalpermuhacir/BugZora/master/install.sh | bash
-
-# Or download first, then run
-wget https://raw.githubusercontent.com/naimalpermuhacir/BugZora/master/install.sh
-chmod +x install.sh
-./install.sh
 ```
 
 #### Windows
-```cmd
-# Using PowerShell (recommended)
+```powershell
 powershell -ExecutionPolicy Bypass -Command "Invoke-Expression (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/naimalpermuhacir/BugZora/master/install.ps1').Content"
-
-# Or download and run manually
-# 1. Download install.ps1
-# 2. Right-click and "Run with PowerShell"
-```
-
-```batch
-# Using Command Prompt
-# Download install.bat and double-click to run
 ```
 
 ### Docker Installation
 
 #### Using Docker Compose (Recommended)
 ```bash
-# Clone the repository
 git clone https://github.com/naimalpermuhacir/BugZora.git
 cd BugZora
-
-# Build and run
 docker-compose build
-docker-compose run bugzora --help
+docker-compose run --rm bugzora --help
 ```
 
 #### Using Docker directly
 ```bash
-# Build the image
 docker build -t bugzora:latest .
-
-# Run the application
 docker run --rm bugzora:latest --help
 ```
 
-For detailed Docker usage, see [DOCKER.md](DOCKER.md).
+#### Multi-Architecture Build
+```bash
+./build-docker.sh v1.2.0
+```
+
+#### Security Scan of Container
+```bash
+./docker-security-scan.sh v1.2.0
+ls -la security-scan-results/
+```
+
+For detailed Docker usage, see [DOCKER.md](DOCKER.md) and [DOCKER_OPTIMIZATION.md](DOCKER_OPTIMIZATION.md).
 
 ### Manual Installation
 
 #### Prerequisites
-1. **Install Trivy**:
-   ```bash
-   # macOS
-   brew install trivy
-   
-   # Ubuntu/Debian
-   sudo apt-get install wget apt-transport-https gnupg lsb-release
-   wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
-   echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
-   sudo apt-get update
-   sudo apt-get install trivy
-   
-   # Alpine
-   sudo apk update
-   sudo apk add --no-cache trivy
-   
-   # Fedora
-   sudo dnf install -y dnf-plugins-core
-   sudo dnf config-manager --add-repo https://aquasecurity.github.io/trivy-repo/rpm/releases/fedora/trivy.repo
-   sudo dnf install -y trivy
-   
-   # CentOS/RHEL
-   sudo yum install -y yum-utils
-   sudo yum-config-manager --add-repo https://aquasecurity.github.io/trivy-repo/rpm/releases/centos/trivy.repo
-   sudo yum install -y trivy
-   
-   # Other Linux
-   # See: https://aquasecurity.github.io/trivy/latest/getting-started/installation/
-   ```
-
+1. **Install Trivy** (see Trivy docs for your OS)
 2. **Install BugZora**:
    ```bash
    git clone https://github.com/naimalpermuhacir/BugZora.git
@@ -118,174 +95,49 @@ For detailed Docker usage, see [DOCKER.md](DOCKER.md).
    go build -o bugzora .
    ```
 
-### Platform-Specific Notes
-
-#### macOS
-- **M1/M2 Macs**: ARM64 builds are automatically detected and installed
-- **Intel Macs**: x86_64 builds are used
-- **Homebrew**: Trivy is automatically installed via Homebrew if available
-
-#### Linux
-- **Ubuntu/Debian, Alpine, Fedora, CentOS, RHEL**: Trivy is automatically installed by the script using the official repositories
-- **Other distributions**: Manual Trivy installation may be required (see Trivy docs)
-- **ARM64 support**: Full support for ARM64 architectures
-
-#### Windows
-- **PowerShell**: Recommended installation method
-- **Command Prompt**: Alternative batch script available
-- **Administrator rights**: May be required for PATH modifications
-- **Antivirus**: May flag the executable; add to exclusions if needed
-
 ## 🎯 Usage
 
 ### Quick Start
 
 ```bash
-# Check available commands
 bugzora --help
-
-# Scan a container image (table output)
 bugzora image alpine:latest
-
-# Scan from a private registry
-bugzora image registry.example.com/myapp:v1.0.0
-
-# Scan with quiet mode
-bugzora image nginx:alpine -q
-
-# Scan a filesystem
 bugzora fs ./my-application
-
-# Scan filesystem with quiet mode
-bugzora fs /path/to/filesystem -q
 ```
 
 ### Docker Usage
 
 ```bash
-# Using Docker Compose
-docker-compose run bugzora image ubuntu:20.04
-docker-compose run bugzora fs /scan-target
-
-# Using Docker directly
+docker-compose run --rm bugzora image ubuntu:20.04
+docker-compose run --rm bugzora fs /scan-target
 docker run --rm bugzora:latest image ubuntu:20.04
 docker run --rm -v $(pwd):/scan-target:ro bugzora:latest fs /scan-target
 ```
 
-### Container Image Scanning
+### Multi-Architecture Build
 
 ```bash
-# Table format output (default)
-bugzora image ubuntu:20.04
-
-# JSON format output
-bugzora image ubuntu:20.04 --output json
-
-# PDF format output
-bugzora image ubuntu:20.04 --output pdf
-
-# Quiet mode
-bugzora image ubuntu:20.04 --quiet
+./build-docker.sh v1.2.0
 ```
 
-### Filesystem Scanning
+### Security Scan of Container
 
 ```bash
-# Table format output
-bugzora fs /path/to/filesystem
-
-# JSON format output
-bugzora fs /path/to/filesystem --output json
-
-# PDF format output
-bugzora fs /path/to/filesystem --output pdf
+./docker-security-scan.sh v1.2.0
+ls -la security-scan-results/
 ```
 
-## 📊 Output Formats
+### Output Formats
 
-### 1. Table Format (Default)
-Provides colored, readable table output in terminal:
-- Vulnerability details
-- Multiple reference links
-- Colored severity indicators
-- Summary statistics
+- Table (default): Colored, readable terminal output
+- JSON: Machine-readable, file-based output (requires writable volume)
+- PDF: Professional report (requires writable volume)
 
-### 2. JSON Format
-Generates comprehensive JSON report:
-- Scan metadata
-- Detailed vulnerability information
-- Multiple reference links
-- Statistical summary
-- Configurable format
+### Security & Performance
 
-### 3. PDF Format
-Creates professional PDF report:
-- Turkish titles and descriptions
-- Colored severity indicators
-- Table format vulnerability list
-- Reference links
-- Summary statistics
-
-## 🔗 Reference System
-
-The following reference types are automatically generated for each vulnerability:
-
-### OS-Specific References
-- **Ubuntu**: Ubuntu Security, Ubuntu Tracker
-- **Debian**: Debian Security Tracker, Debian Security
-- **Alpine**: Alpine Security
-- **Red Hat**: Red Hat Security, Red Hat Bugzilla
-
-### General CVE References
-- **AquaSec**: Primary vulnerability analysis
-- **CVE Details**: Comprehensive CVE information
-- **MITRE**: Official CVE database
-- **NVD**: National Vulnerability Database
-
-## 📁 Output Files
-
-Reports are generated with the following naming convention:
-- `report-{target}.json` - JSON report
-- `report-{target}.pdf` - PDF report
-
-Examples:
-- `report-ubuntu-20.04.json`
-- `report-ubuntu-20.04.pdf`
-- `report-test-fs.json`
-
-## 🎨 Sample Outputs
-
-### Table Format
-```
---- Vulnerability Scan Report for: ubuntu:20.04 ---
-+----------+------------------+----------+------------------+------------------+----------------------------+
-| PACKAGE  | VULNERABILITY ID | SEVERITY |  INSTALLED VER   |    FIXED VER     |             TITLE          |
-+----------+------------------+----------+------------------+------------------+----------------------------+
-| libc-bin | CVE-2025-4802    | MEDIUM   | 2.31-0ubuntu9.17 | 2.31-0ubuntu9.18 | glibc: static setuid binary |
-|          |                  |          |                  |                  | dlopen may incorrectly search|
-|          |                  |          |                  |                  | LD_LIBRARY_PATH             |
-+----------+------------------+----------+------------------+------------------+----------------------------+
-```
-
-### JSON Format
-```json
-{
-  "scan_info": {
-    "scanner": "bugzora",
-    "version": "1.1.1",
-    "scan_time": "2025-06-25T10:38:52Z"
-  },
-  "summary": {
-    "critical": 0,
-    "high": 0,
-    "medium": 2,
-    "low": 0,
-    "unknown": 0,
-    "total": 2
-  },
-  "results": [...]
-}
-```
+- Non-root user, read-only rootfs, dropped capabilities
+- Health checks and resource limits
+- Trivy cache volume for fast repeated scans
 
 ## 🔧 Development
 
@@ -299,23 +151,17 @@ BugZora/
 ├── db/            # Trivy database
 ├── Dockerfile     # Docker container definition
 ├── docker-compose.yml  # Docker Compose configuration
-├── .github/workflows/  # CI/CD pipeline
+├── .dockerignore      # Build optimization
+├── build-docker.sh    # Multi-arch build script
+├── docker-security-scan.sh # Security scan script
+├── DOCKER_OPTIMIZATION.md  # Docker optimization guide
 └── main.go        # Main application
 ```
 
-### Dependencies
-- `github.com/spf13/cobra` - CLI framework
-- `github.com/aquasecurity/trivy` - Vulnerability scanning engine
-- `github.com/olekukonko/tablewriter` - Table creation
-- `github.com/fatih/color` - Colored terminal output
-- `github.com/jung-kurt/gofpdf` - PDF generation
-
 ### CI/CD Pipeline
-The project includes a comprehensive GitHub Actions pipeline:
-- **Test**: Unit tests and linting
-- **Build**: Multi-platform builds (Linux, macOS, Windows)
-- **Security Scan**: Automated vulnerability scanning
-- **Release**: Automated releases with GoReleaser
+- Test, build, security scan, release (GoReleaser)
+- Multi-platform builds
+- Automated Docker builds and security scans
 
 ## 🤝 Contributing
 
@@ -341,7 +187,7 @@ For issues:
 - **v1.0.0**: Initial release - basic scanning features
 - **v1.1.0**: Multi-reference system added
 - **v1.1.1**: Docker support and CI/CD pipeline
-- **v1.2.0**: JSON and PDF format support added
+- **v1.2.0**: Docker optimizations, security hardening, multi-arch, advanced reporting
 - **v1.3.0**: Advanced reporting and metadata added
 
 ---

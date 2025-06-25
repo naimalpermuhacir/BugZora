@@ -69,6 +69,10 @@ report-*.pdf
 # Project state file (internal development tracking)
 PROJECT_STATE.md
 
+# Usage guide (local documentation)
+how_to_use.md
+how_to_use_tr.md
+
 # Backup files
 *.bak
 *.backup
