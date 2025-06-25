@@ -1,34 +1,27 @@
 <!-- CI debug adımı testi için dummy değişiklik -->
 # BugZora
 
-A comprehensive security scanning tool for container images and filesystems, built with Go.
+A comprehensive security scanning tool for container images and filesystems, built with Go and powered by Trivy.
 
-## Features
+## 🚀 Features
 
 - **Container Image Scanning**: Scan Docker images for vulnerabilities
 - **Filesystem Scanning**: Scan local filesystems for security issues
 - **Multiple Output Formats**: JSON, PDF, and colored table output
 - **Cross-Platform Support**: Linux, macOS, and Windows
+- **Docker Support**: Containerized deployment with multi-stage builds
 - **Automated CI/CD**: GitHub Actions integration with security scanning
-- **Modern Report Summary**: A summary table at the top of the terminal output for quick overview.
-- **Bold Table Headers & Summary**: Table headers and summary lines are bold for better readability.
-- **Extra Spacing Between Tables**: Visually clear separation between different result tables in terminal output.
-- **Legend Section**: Explains table symbols for clarity.
-
-## 🚀 Features
-
-- **Multiple Format Support**: Generate reports in JSON, PDF, and table formats
-- **Container Image Scanning**: Scan images from Docker Hub and other registries
-- **Filesystem Scanning**: Scan local filesystems for vulnerabilities
-- **OS Detection**: Automatic OS detection and appropriate reference links
+- **Modern Report Summary**: A summary table at the top of the terminal output for quick overview
+- **Bold Table Headers & Summary**: Table headers and summary lines are bold for better readability
+- **Extra Spacing Between Tables**: Visually clear separation between different result tables in terminal output
+- **Legend Section**: Explains table symbols for clarity
 - **Multi-Reference System**: Comprehensive reference links for each vulnerability
-- **Colored Terminal Output**: Readable and professional table format
-- **Detailed Reporting**: Vulnerability statistics and metadata
 
 ## 📋 Requirements
 
 - Trivy CLI tool (automatically installed by installation scripts)
 - Internet connection (for database updates)
+- Docker (optional, for containerized usage)
 
 ## 🛠️ Installation
 
@@ -59,6 +52,30 @@ powershell -ExecutionPolicy Bypass -Command "Invoke-Expression (Invoke-WebReques
 # Using Command Prompt
 # Download install.bat and double-click to run
 ```
+
+### Docker Installation
+
+#### Using Docker Compose (Recommended)
+```bash
+# Clone the repository
+git clone https://github.com/naimalpermuhacir/BugZora.git
+cd BugZora
+
+# Build and run
+docker-compose build
+docker-compose run bugzora --help
+```
+
+#### Using Docker directly
+```bash
+# Build the image
+docker build -t bugzora:latest .
+
+# Run the application
+docker run --rm bugzora:latest --help
+```
+
+For detailed Docker usage, see [DOCKER.md](DOCKER.md).
 
 ### Manual Installation
 
@@ -141,6 +158,18 @@ bugzora fs ./my-application
 
 # Scan filesystem with quiet mode
 bugzora fs /path/to/filesystem -q
+```
+
+### Docker Usage
+
+```bash
+# Using Docker Compose
+docker-compose run bugzora image ubuntu:20.04
+docker-compose run bugzora fs /scan-target
+
+# Using Docker directly
+docker run --rm bugzora:latest image ubuntu:20.04
+docker run --rm -v $(pwd):/scan-target:ro bugzora:latest fs /scan-target
 ```
 
 ### Container Image Scanning
@@ -243,8 +272,8 @@ Examples:
 {
   "scan_info": {
     "scanner": "bugzora",
-    "version": "1.0.0",
-    "scan_time": "2025-06-24T11:22:10.657964+03:00"
+    "version": "1.1.1",
+    "scan_time": "2025-06-25T10:38:52Z"
   },
   "summary": {
     "critical": 0,
@@ -268,6 +297,9 @@ BugZora/
 │   ├── report/    # Reporting module
 │   └── vuln/      # Vulnerability scanning module
 ├── db/            # Trivy database
+├── Dockerfile     # Docker container definition
+├── docker-compose.yml  # Docker Compose configuration
+├── .github/workflows/  # CI/CD pipeline
 └── main.go        # Main application
 ```
 
@@ -277,6 +309,13 @@ BugZora/
 - `github.com/olekukonko/tablewriter` - Table creation
 - `github.com/fatih/color` - Colored terminal output
 - `github.com/jung-kurt/gofpdf` - PDF generation
+
+### CI/CD Pipeline
+The project includes a comprehensive GitHub Actions pipeline:
+- **Test**: Unit tests and linting
+- **Build**: Multi-platform builds (Linux, macOS, Windows)
+- **Security Scan**: Automated vulnerability scanning
+- **Release**: Automated releases with GoReleaser
 
 ## 🤝 Contributing
 
@@ -301,6 +340,7 @@ For issues:
 
 - **v1.0.0**: Initial release - basic scanning features
 - **v1.1.0**: Multi-reference system added
+- **v1.1.1**: Docker support and CI/CD pipeline
 - **v1.2.0**: JSON and PDF format support added
 - **v1.3.0**: Advanced reporting and metadata added
 
