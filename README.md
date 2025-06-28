@@ -12,6 +12,57 @@ BugZora, Trivy motorunu kullanan, konteyner imajları ve dosya sistemleri için 
 - Modern, renkli ve özetli tablo raporu
 - Multi-arch ve Docker optimizasyonları
 
+## Features
+
+- 🔍 **Container Image Scanning** - Scan Docker images from registries
+- 📁 **Filesystem Scanning** - Scan local filesystems for vulnerabilities
+- 🔐 **Secret Detection** - Find exposed secrets, API keys, and passwords
+- 📜 **License Scanning** - Detect software licenses and compliance issues
+- 🏗️ **Repository Scanning** - Scan Git repositories directly
+- 📊 **Multiple Output Formats** - Table, JSON, PDF, SARIF, CycloneDX, SPDX
+- 🎨 **Colored Terminal Output** - Beautiful, detailed vulnerability tables
+- ⚡ **Policy Enforcement** - Automated security policy evaluation
+- 🔧 **Full Trivy CLI Support** - All Trivy flags and options available
+- 🐳 **Docker Support** - Lightweight containerized deployment
+- 🔒 **Security Focused** - Built with security best practices
+
+## Quick Start
+
+### Installation
+
+```bash
+# Download and install
+curl -sSfL https://raw.githubusercontent.com/naimalpermuhacir/BugZora/main/install.sh | sh
+
+# Or use Docker
+docker run --rm -v $(pwd):/scan naimalpermuhacir/bugzora:latest
+```
+
+### Basic Usage
+
+```bash
+# Scan a container image
+bugzora image ubuntu:20.04
+
+# Scan a filesystem
+bugzora fs /path/to/filesystem
+
+# Scan for secrets
+bugzora secret /path/to/code
+
+# Scan for licenses
+bugzora license /path/to/project
+
+# Scan a Git repository
+bugzora repo https://github.com/user/repo
+
+# Generate JSON report
+bugzora image alpine:latest --output json
+
+# Use policy enforcement
+bugzora fs ./my-app --policy-file security-policy.yaml
+```
+
 ## 🚀 Features
 
 - **Container Image Scanning**: Scan Docker images for vulnerabilities

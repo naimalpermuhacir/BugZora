@@ -147,3 +147,14 @@ func ScanImage(ctx context.Context, imageName string, quiet bool) (types.Report,
 func ScanImageWithArgs(ctx context.Context, imageName string, trivyArgs []string, quiet bool) (types.Report, error) {
 	return runTrivyCommandWithArgs(ctx, trivyArgs, quiet)
 }
+
+// ScanRepository uses the trivy CLI to scan a Git repository for vulnerabilities.
+func ScanRepository(ctx context.Context, repoURL string, quiet bool) (types.Report, error) {
+	args := []string{"repo", repoURL}
+	return runTrivyCommand(ctx, args...)
+}
+
+// ScanRepositoryWithArgs uses the trivy CLI to scan a Git repository with custom arguments.
+func ScanRepositoryWithArgs(ctx context.Context, repoURL string, trivyArgs []string, quiet bool) (types.Report, error) {
+	return runTrivyCommandWithArgs(ctx, trivyArgs, quiet)
+}
