@@ -27,8 +27,8 @@ type Rule struct {
 	Conditions  map[string]string `json:"conditions" yaml:"conditions"`
 }
 
-// PolicyResult represents the result of policy evaluation
-type PolicyResult struct {
+// Result represents the result of policy evaluation
+type Result struct {
 	Passed     bool     `json:"passed"`
 	Violations []string `json:"violations"`
 	Warnings   []string `json:"warnings"`
@@ -70,8 +70,8 @@ func LoadPolicy(filePath string) (*Policy, error) {
 }
 
 // EvaluatePolicy evaluates vulnerabilities against the policy
-func EvaluatePolicy(policy *Policy, vulnerabilities []Vulnerability) *PolicyResult {
-	result := &PolicyResult{
+func EvaluatePolicy(policy *Policy, vulnerabilities []Vulnerability) *Result {
+	result := &Result{
 		Passed:     true,
 		Violations: []string{},
 		Warnings:   []string{},
