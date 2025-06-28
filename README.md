@@ -1,16 +1,98 @@
 <!-- CI debug adımı testi için dummy değişiklik -->
 # BugZora
 
-BugZora, Trivy motorunu kullanan, konteyner imajları ve dosya sistemleri için gelişmiş bir güvenlik tarama aracıdır.
+BugZora, konteyner imajları, dosya sistemleri ve git repository'leri için gelişmiş bir güvenlik tarama aracıdır.
 
 ## Özellikler
-- Tüm Trivy CLI parametrelerini destekler (örn. --severity, --scanners, --ignore-unfixed, --exit-code, --skip-dirs, --list-all-pkgs, --offline-scan, --template, --policy, --config, --token, --proxy, --timeout, --download-db-only, --reset, --clear-cache, --debug, --trace, --no-progress, --ignore-policy, --skip-update, --skip-db-update, --skip-policy-update, --security-checks, --compliance, --namespaces, --output, --ignore-ids, --ignore-file, --include-dev-deps, --skip-java-db, --only-update, --refresh, --auto-refresh, --light)
+- Gelişmiş güvenlik tarama parametreleri ile tam özelleştirilebilir tarama
 - Çoklu çıktı formatı: table, json, pdf, SARIF, CycloneDX, SPDX
-- Policy enforcement (OPA/Rego)
-- Secret ve license tarama
-- Kubernetes ve repository tarama (yeni sürümlerde)
+- **Policy enforcement** (YAML/JSON dosyası ile otomatik karar)
+- **Secret tarama**: Dosya sistemi ve repo için `bugzora secret [target]`
+- **License tarama**: Dosya sistemi ve repo için `bugzora license [target]`
+- **Repository tarama**: Git repo için `bugzora repo [repo-url]`
 - Modern, renkli ve özetli tablo raporu
 - Multi-arch ve Docker optimizasyonları
+
+## Komutlar
+- `bugzora image [image]` - Container image tarama
+- `bugzora fs [path]` - Dosya sistemi tarama
+- `bugzora secret [path]` - Secret tarama (API key, şifre, token, vs.)
+- `bugzora license [path]` - License tarama (lisans uyumluluğu)
+- `bugzora repo [repo-url]` - Git repository tarama (vuln, secret, license)
+
+## Hızlı Başlangıç
+
+```bash
+# Container image tarama
+bugzora image ubuntu:20.04
+
+# Dosya sistemi tarama
+bugzora fs ./my-app
+
+# Secret tarama
+bugzora secret ./my-app
+
+# License tarama
+bugzora license ./my-app
+
+# Git repository tarama
+bugzora repo https://github.com/user/repo
+
+# Policy enforcement ile tarama
+bugzora fs ./my-app --policy-file policy-example.yaml
+
+# Gelişmiş parametrelerle tarama
+bugzora image nginx:latest --severity HIGH,CRITICAL --scanners vuln,secret,license --output json
+```
+
+## Policy Enforcement (Politika Uygulaması)
+
+- Policy dosyanızı (YAML/JSON) hazırlayıp `--policy-file` parametresiyle kullanabilirsiniz.
+- CI/CD pipeline'larında otomatik kararlar almak için idealdir.
+- Policy ihlali olursa terminalde kırmızı uyarı ve exit code 3 ile çıkılır.
+
+### Policy Dosyası Örneği (policy-example.yaml)
+```yaml
+rules:
+  - name: "Critical Vulnerabilities"
+    description: "Deny if any CRITICAL vulnerabilities are found"
+    severity: "CRITICAL"
+    max_count: 0
+    action: "deny"
+  - name: "High Vulnerabilities"
+    description: "Warn if more than 5 HIGH vulnerabilities are found"
+    severity: "HIGH"
+    max_count: 5
+    action: "warn"
+```
+
+## Gelişmiş Kullanım
+
+```bash
+# Sadece secret taraması
+bugzora secret ./my-app
+
+# Sadece license taraması
+bugzora license ./my-app
+
+# Git repository taraması
+bugzora repo https://github.com/user/repo
+
+# Policy enforcement ile image tarama
+docker run --rm -v $(pwd):/scan -v $(pwd)/policy-example.yaml:/scan/policy.yaml bugzora:latest image ubuntu:20.04 --policy-file /scan/policy.yaml
+```
+
+## Gelişmiş Parametreler
+- Tüm komutlarda gelişmiş parametreler ve filtreler kullanılabilir:
+  - `--severity`, `--scanners`, `--ignore-unfixed`, `--exit-code`, `--skip-dirs`, `--list-all-pkgs`, `--offline-scan`, `--template`, `--config`, `--token`, `--proxy`, `--timeout`, `--download-db-only`, `--debug`, `--trace`, `--no-progress`, `--ignore-policy`, `--skip-update`, `--skip-db-update`, `--skip-policy-update`, `--security-checks`, `--compliance`, `--namespaces`, `--output`, `--ignore-ids`, `--ignore-file`, `--include-dev-deps`, `--skip-java-db`, `--only-update`, `--refresh`, `--auto-refresh`, `--light` ve daha fazlası.
+- Örnek: `bugzora image nginx:latest --severity HIGH,CRITICAL --scanners vuln,secret,license --output json`
+
+## Desteklenen Platformlar
+- Linux, macOS, Windows
+- Docker, Docker Compose, multi-arch
+
+## Katkı ve Lisans
+MIT Lisansı ile açık kaynak. Katkı için PR gönderebilirsiniz.
 
 ## Features
 
@@ -256,28 +338,7 @@ For issues:
 - Policy dosyanızı (YAML/JSON) hazırlayıp `--policy-file` parametresiyle kullanabilirsiniz.
 - CI/CD pipeline'larında otomatik kararlar almak için idealdir.
 
-### Policy Dosyası Örneği (policy.yaml)
-```yaml
-rules:
-  - name: "Critical Vulnerabilities"
-    description: "Deny if any CRITICAL vulnerabilities are found"
-    severity: "CRITICAL"
-    max_count: 0
-    action: "deny"
-  - name: "High Vulnerabilities"
-    description: "Warn if more than 5 HIGH vulnerabilities are found"
-    severity: "HIGH"
-    max_count: 5
-    action: "warn"
-```
-
-### Policy ile Kullanım
-```bash
-bugzora image ubuntu:20.04 --policy-file policy.yaml
-bugzora fs ./my-app --policy-file policy.yaml
-```
-
-Policy ihlali olursa terminalde kırmızı uyarı ve exit code 3 ile çıkılır. Uyarı varsa sarı renkte gösterilir.
+### Policy ihlali olursa terminalde kırmızı uyarı ve exit code 3 ile çıkılır. Uyarı varsa sarı renkte gösterilir.
 
 ### Advanced Usage
 

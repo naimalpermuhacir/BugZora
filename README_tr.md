@@ -1,22 +1,77 @@
-# BugZora - Güvenlik Tarama Uygulaması
+# BugZora
 
-Copyright © 2025 BugZora <bugzora@bugzora.dev>
+BugZora, konteyner imajları, dosya sistemleri ve git repository'leri için gelişmiş bir güvenlik tarama aracıdır.
 
-Bu uygulama, konteyner imajları ve dosya sistemlerini tarayarak güvenlik açıklarını tespit eden gelişmiş bir güvenlik tarama aracıdır. Trivy altyapısını kullanarak kapsamlı zafiyet analizi yapar ve sonuçları farklı formatlarda sunar.
+## Özellikler
+- Gelişmiş güvenlik tarama parametreleri ile tam özelleştirilebilir tarama
+- Çoklu çıktı formatı: table, json, pdf, SARIF, CycloneDX, SPDX
+- **Policy enforcement** (YAML/JSON dosyası ile otomatik karar)
+- **Secret tarama**: Dosya sistemi ve repo için `bugzora secret [hedef]`
+- **License tarama**: Dosya sistemi ve repo için `bugzora license [hedef]`
+- **Repository tarama**: Git repo için `bugzora repo [repo-url]`
+- Modern, renkli ve özetli tablo raporu
+- Multi-arch ve Docker optimizasyonları
 
-## 🚀 Özellikler
+## Komutlar
+- `bugzora image [imaj]` - Container image tarama
+- `bugzora fs [dizin]` - Dosya sistemi tarama
+- `bugzora secret [dizin]` - Secret tarama (API key, şifre, token, vs.)
+- `bugzora license [dizin]` - License tarama (lisans uyumluluğu)
+- `bugzora repo [repo-url]` - Git repository tarama (vuln, secret, license)
 
-- **Çoklu Format Desteği**: JSON, PDF ve tablo formatlarında rapor oluşturma
-- **Konteyner İmaj Taraması**: Docker Hub ve diğer registry'lerden imaj tarama
-- **Dosya Sistemi Taraması**: Yerel dosya sistemlerini tarama
-- **İşletim Sistemi Tespiti**: Otomatik OS tespiti ve uygun referans linkleri
-- **Çoklu Referans Sistemi**: Her zafiyet için kapsamlı referans linkleri
-- **Renkli Terminal Çıktısı**: Okunabilir ve profesyonel tablo formatı
-- **Detaylı Raporlama**: Zafiyet istatistikleri ve metadata
-- **Yeni Stil Rapor Özeti**: Terminal çıktısının başında hızlı genel bakış için özet tablo.
-- **Kalın Tablo Başlıkları & Özet**: Tablo başlıkları ve özet satırları daha okunaklı olması için kalın.
-- **Tablolar Arası Ekstra Boşluk**: Terminalde farklı tablo geçişleri daha belirgin.
-- **Açıklamalı Legend Alanı**: Tablo sembollerinin anlamı için açıklama.
+## Hızlı Başlangıç
+
+```bash
+bugzora image ubuntu:20.04
+bugzora fs ./uygulama
+bugzora secret ./uygulama
+bugzora license ./uygulama
+bugzora repo https://github.com/user/repo
+bugzora fs ./uygulama --policy-file policy-example.yaml
+bugzora image nginx:latest --severity HIGH,CRITICAL --scanners vuln,secret,license --output json
+```
+
+## Policy Enforcement (Politika Uygulaması)
+
+- Policy dosyanızı (YAML/JSON) hazırlayıp `--policy-file` parametresiyle kullanabilirsiniz.
+- CI/CD pipeline'larında otomatik kararlar almak için idealdir.
+- Policy ihlali olursa terminalde kırmızı uyarı ve exit code 3 ile çıkılır.
+
+### Policy Dosyası Örneği (policy-example.yaml)
+```yaml
+rules:
+  - name: "Critical Vulnerabilities"
+    description: "Deny if any CRITICAL vulnerabilities are found"
+    severity: "CRITICAL"
+    max_count: 0
+    action: "deny"
+  - name: "High Vulnerabilities"
+    description: "Warn if more than 5 HIGH vulnerabilities are found"
+    severity: "HIGH"
+    max_count: 5
+    action: "warn"
+```
+
+## Gelişmiş Kullanım
+
+```bash
+bugzora secret ./uygulama
+bugzora license ./uygulama
+bugzora repo https://github.com/user/repo
+docker run --rm -v $(pwd):/scan -v $(pwd)/policy-example.yaml:/scan/policy.yaml bugzora:latest image ubuntu:20.04 --policy-file /scan/policy.yaml
+```
+
+## Gelişmiş Parametreler
+- Tüm komutlarda gelişmiş parametreler ve filtreler kullanılabilir:
+  - `--severity`, `--scanners`, `--ignore-unfixed`, `--exit-code`, `--skip-dirs`, `--list-all-pkgs`, `--offline-scan`, `--template`, `--config`, `--token`, `--proxy`, `--timeout`, `--download-db-only`, `--debug`, `--trace`, `--no-progress`, `--ignore-policy`, `--skip-update`, `--skip-db-update`, `--skip-policy-update`, `--security-checks`, `--compliance`, `--namespaces`, `--output`, `--ignore-ids`, `--ignore-file`, `--include-dev-deps`, `--skip-java-db`, `--only-update`, `--refresh`, `--auto-refresh`, `--light` ve daha fazlası.
+- Örnek: `bugzora image nginx:latest --severity HIGH,CRITICAL --scanners vuln,secret,license --output json`
+
+## Desteklenen Platformlar
+- Linux, macOS, Windows
+- Docker, Docker Compose, multi-arch
+
+## Katkı ve Lisans
+MIT Lisansı ile açık kaynak. Katkı için PR gönderebilirsiniz.
 
 ## 📋 Gereksinimler
 
@@ -134,6 +189,21 @@ bugzora fs ./my-application
 
 # Dosya sistemini sessiz modda tara
 bugzora fs /path/to/filesystem -q
+
+# Secret tarama
+bugzora secret ./uygulama
+
+# License tarama
+bugzora license ./uygulama
+
+# Repository tarama
+bugzora repo https://github.com/user/repo
+
+# Policy enforcement
+bugzora fs ./uygulama --policy-file policy-example.yaml
+
+# Docker optimizasyonları
+docker run --rm -v $(pwd):/scan -v $(pwd)/policy-example.yaml:/scan/policy.yaml bugzora:latest image ubuntu:20.04 --policy-file /scan/policy.yaml
 ```
 
 ### Konteyner İmaj Taraması

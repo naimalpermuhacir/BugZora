@@ -23,8 +23,8 @@ var licenseCmd = &cobra.Command{
 		// Build Trivy command with license scanning
 		trivyArgs := buildTrivyArgs("fs", target)
 
-		// Override security checks to only scan for licenses
-		trivyArgs = append(trivyArgs, "--security-checks", "license")
+		// Override scanners to only scan for licenses
+		trivyArgs = append(trivyArgs, "--scanners", "license")
 
 		scanReport, err := vuln.ScanFilesystemWithArgs(context.Background(), target, trivyArgs, quiet)
 		if err != nil {

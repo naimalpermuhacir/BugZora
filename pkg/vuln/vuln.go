@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"os/exec"
+	"strings"
 
 	"github.com/aquasecurity/trivy/pkg/types"
 	"golang.org/x/xerrors"
@@ -31,10 +32,18 @@ func runTrivyCommand(ctx context.Context, args ...string) (types.Report, error) 
 
 	// If stderr has content, it means trivy encountered a real error (e.g., image not found).
 	if stderr.Len() > 0 {
-		// In quiet mode, trivy might still output non-fatal errors to stderr.
-		// A common case is "vulnerability DB is not full". We can ignore it
-		// or decide to log it. For now, we return it as an error.
-		return report, xerrors.Errorf("trivy command failed: %s", stderr.String())
+		stderrStr := stderr.String()
+
+		// Check if stderr contains actual error messages (not just info/warning)
+		if strings.Contains(stderrStr, "ERROR") ||
+			strings.Contains(stderrStr, "error") ||
+			strings.Contains(stderrStr, "not found") ||
+			strings.Contains(stderrStr, "failed") {
+			return report, xerrors.Errorf("trivy command failed: %s", stderrStr)
+		}
+
+		// If it's just INFO/WARN messages, we can ignore them
+		// Trivy often writes progress info to stderr even in quiet mode
 	}
 
 	// If stdout is empty, it means no report was generated.
@@ -103,10 +112,18 @@ func runTrivyCommandWithArgs(ctx context.Context, args []string, quiet bool) (ty
 
 	// If stderr has content, it means trivy encountered a real error (e.g., image not found).
 	if stderr.Len() > 0 {
-		// In quiet mode, trivy might still output non-fatal errors to stderr.
-		// A common case is "vulnerability DB is not full". We can ignore it
-		// or decide to log it. For now, we return it as an error.
-		return report, xerrors.Errorf("trivy command failed: %s", stderr.String())
+		stderrStr := stderr.String()
+
+		// Check if stderr contains actual error messages (not just info/warning)
+		if strings.Contains(stderrStr, "ERROR") ||
+			strings.Contains(stderrStr, "error") ||
+			strings.Contains(stderrStr, "not found") ||
+			strings.Contains(stderrStr, "failed") {
+			return report, xerrors.Errorf("trivy command failed: %s", stderrStr)
+		}
+
+		// If it's just INFO/WARN messages, we can ignore them
+		// Trivy often writes progress info to stderr even in quiet mode
 	}
 
 	// If stdout is empty, it means no report was generated.
