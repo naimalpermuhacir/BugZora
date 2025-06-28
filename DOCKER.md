@@ -238,6 +238,37 @@ done
 - [build-docker.sh](build-docker.sh): Multi-arch build script
 - [docker-security-scan.sh](docker-security-scan.sh): Automated security scan script
 
+## 🚦 Policy Enforcement (Policy Dosyası ile Otomatik Karar)
+
+- Policy enforcement ile güvenlik tarama sonuçlarını kurallara göre otomatik değerlendirin.
+- Policy dosyanızı (YAML/JSON) container içine mount ederek kullanabilirsiniz.
+- CI/CD pipeline'larında otomatik kararlar almak için idealdir.
+
+### Policy Dosyası Örneği (policy.yaml)
+```yaml
+rules:
+  - name: "Critical Vulnerabilities"
+    description: "Deny if any CRITICAL vulnerabilities are found"
+    severity: "CRITICAL"
+    max_count: 0
+    action: "deny"
+  - name: "High Vulnerabilities"
+    description: "Warn if more than 5 HIGH vulnerabilities are found"
+    severity: "HIGH"
+    max_count: 5
+    action: "warn"
+```
+
+### Policy ile Docker Kullanımı
+```bash
+# Policy dosyasını mount ederek image tarama
+docker run --rm -v $(pwd):/scan-target:ro -v $(pwd)/policy.yaml:/scan/policy.yaml bugzora:latest fs /scan-target --policy-file /scan/policy.yaml
+
+docker-compose run --rm -v $(pwd)/policy.yaml:/scan/policy.yaml bugzora image alpine:latest --policy-file /scan/policy.yaml
+```
+
+Policy ihlali olursa terminalde kırmızı uyarı ve exit code 3 ile çıkılır. Uyarı varsa sarı renkte gösterilir.
+
 ---
 
 **BugZora Docker Guide**  

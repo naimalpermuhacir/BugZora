@@ -294,8 +294,9 @@ Sorunlarınız için:
 
 - **v1.0.0**: İlk sürüm - temel tarama özellikleri
 - **v1.1.0**: Çoklu referans sistemi eklendi
-- **v1.2.0**: JSON ve PDF format desteği eklendi
-- **v1.3.0**: Gelişmiş raporlama ve metadata eklendi
+- **v1.1.1**: Docker desteği ve CI/CD pipeline
+- **v1.2.0**: Docker optimizasyonları, güvenlik sertleştirme, çoklu mimari, gelişmiş raporlama
+- **v1.3.0**: Tam Trivy CLI parametre desteği, policy enforcement, gelişmiş tarama seçenekleri
 
 ---
 

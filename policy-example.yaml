@@ -1,0 +1,36 @@
+# BugZora Policy Example
+# Bu dosya ile güvenlik tarama sonuçlarınıza otomatik kurallar uygulayabilirsiniz.
+# Her kural için name, description, severity, max_count, min_count ve action alanlarını kullanabilirsiniz.
+# action: deny (pipeline'ı durdurur), warn (sarı uyarı verir), allow (her zaman izin verir)
+
+rules:
+  - name: "Critical Vulnerabilities"
+    description: "Deny if any CRITICAL vulnerabilities are found"
+    severity: "CRITICAL"
+    max_count: 0
+    action: "deny"
+
+  - name: "High Vulnerabilities"
+    description: "Warn if more than 5 HIGH vulnerabilities are found"
+    severity: "HIGH"
+    max_count: 5
+    action: "warn"
+
+  - name: "Medium Vulnerabilities"
+    description: "Warn if more than 20 MEDIUM vulnerabilities are found"
+    severity: "MEDIUM"
+    max_count: 20
+    action: "warn"
+
+  - name: "Block RCE Vulnerabilities"
+    description: "Deny if any vulnerability with RCE in the title is found"
+    severity: "CRITICAL"
+    max_count: 0
+    action: "deny"
+    # Ek koşullar için ileride conditions alanı kullanılabilir
+
+  - name: "Allow Info Leaks"
+    description: "Allow vulnerabilities with only informational severity"
+    severity: "LOW"
+    max_count: 9999
+    action: "allow" 

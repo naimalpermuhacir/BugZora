@@ -197,7 +197,47 @@ For issues:
 - **v1.1.0**: Multi-reference system added
 - **v1.1.1**: Docker support and CI/CD pipeline
 - **v1.2.0**: Docker optimizations, security hardening, multi-arch, advanced reporting
-- **v1.3.0**: Advanced reporting and metadata added
+- **v1.3.0**: Full Trivy CLI parameter support, policy enforcement, advanced scanning options
+
+## 🚦 Policy Enforcement (Politika Uygulaması)
+
+- **Policy enforcement** ile güvenlik tarama sonuçlarını önceden tanımlanmış kurallara göre otomatik olarak değerlendirebilirsiniz.
+- Policy dosyanızı (YAML/JSON) hazırlayıp `--policy-file` parametresiyle kullanabilirsiniz.
+- CI/CD pipeline'larında otomatik kararlar almak için idealdir.
+
+### Policy Dosyası Örneği (policy.yaml)
+```yaml
+rules:
+  - name: "Critical Vulnerabilities"
+    description: "Deny if any CRITICAL vulnerabilities are found"
+    severity: "CRITICAL"
+    max_count: 0
+    action: "deny"
+  - name: "High Vulnerabilities"
+    description: "Warn if more than 5 HIGH vulnerabilities are found"
+    severity: "HIGH"
+    max_count: 5
+    action: "warn"
+```
+
+### Policy ile Kullanım
+```bash
+bugzora image ubuntu:20.04 --policy-file policy.yaml
+bugzora fs ./my-app --policy-file policy.yaml
+```
+
+Policy ihlali olursa terminalde kırmızı uyarı ve exit code 3 ile çıkılır. Uyarı varsa sarı renkte gösterilir.
+
+### Advanced Usage
+
+```bash
+# Policy enforcement ile tarama
+bugzora image alpine:latest --policy-file policy.yaml
+bugzora fs ./my-app --policy-file policy.yaml
+
+docker-compose run --rm bugzora image ubuntu:20.04 --policy-file /scan/policy.yaml
+docker run --rm -v $(pwd):/scan-target:ro -v $(pwd)/policy.yaml:/scan/policy.yaml bugzora:latest fs /scan-target --policy-file /scan/policy.yaml
+```
 
 ---
 

@@ -46,7 +46,7 @@ var (
 	skipPolicyUpdate bool
 	securityChecks   string
 	compliance       string
-	policy           string
+	trivyPolicy      string
 	namespaces       []string
 	format           string
 	output           string
@@ -60,6 +60,7 @@ var (
 	refresh          bool
 	autoRefresh      bool
 	light            bool
+	policyFile       string
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -126,7 +127,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolVar(&skipPolicyUpdate, "skip-policy-update", false, "Skip updating policy database")
 	rootCmd.PersistentFlags().StringVar(&securityChecks, "security-checks", "vuln", "Comma-separated list of what security issues to detect (vuln,config,secret,license)")
 	rootCmd.PersistentFlags().StringVar(&compliance, "compliance", "", "Compliance report to generate (docker-cis,kubernetes-cis,aws-cis)")
-	rootCmd.PersistentFlags().StringVar(&policy, "policy", "", "Specify the Rego file path to evaluate each vulnerability")
+	rootCmd.PersistentFlags().StringVar(&trivyPolicy, "policy", "", "Specify the Rego file path to evaluate each vulnerability")
 	rootCmd.PersistentFlags().StringSliceVar(&namespaces, "namespaces", []string{}, "Rego namespaces")
 	rootCmd.PersistentFlags().StringVar(&format, "format", "", "Format (table, json, sarif, template, cyclonedx, spdx)")
 	rootCmd.PersistentFlags().StringVar(&output, "output-file", "", "Output file path")
@@ -140,4 +141,5 @@ func init() {
 	rootCmd.PersistentFlags().BoolVar(&refresh, "refresh", false, "Refresh DB (usually used after version update of scanner)")
 	rootCmd.PersistentFlags().BoolVar(&autoRefresh, "auto-refresh", false, "Auto refresh before scanning")
 	rootCmd.PersistentFlags().BoolVar(&light, "light", false, "Light mode (suitable for CI)")
+	rootCmd.PersistentFlags().StringVar(&policyFile, "policy-file", "", "Policy file (YAML/JSON) for policy enforcement")
 }
