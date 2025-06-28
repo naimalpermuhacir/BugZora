@@ -28,6 +28,8 @@ archives:
       - README.md
       - README_tr.md
       - LICENSE
+      - DOCKER.md
+      - PROJECT_STATE.md
       - install.sh
       - install.bat
       - install.ps1

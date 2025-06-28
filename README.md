@@ -1,7 +1,16 @@
 <!-- CI debug adımı testi için dummy değişiklik -->
 # BugZora
 
-A comprehensive security scanning tool for container images and filesystems, built with Go and powered by Trivy.
+BugZora, Trivy motorunu kullanan, konteyner imajları ve dosya sistemleri için gelişmiş bir güvenlik tarama aracıdır.
+
+## Özellikler
+- Tüm Trivy CLI parametrelerini destekler (örn. --severity, --scanners, --ignore-unfixed, --exit-code, --skip-dirs, --list-all-pkgs, --offline-scan, --template, --policy, --config, --token, --proxy, --timeout, --download-db-only, --reset, --clear-cache, --debug, --trace, --no-progress, --ignore-policy, --skip-update, --skip-db-update, --skip-policy-update, --security-checks, --compliance, --namespaces, --output, --ignore-ids, --ignore-file, --include-dev-deps, --skip-java-db, --only-update, --refresh, --auto-refresh, --light)
+- Çoklu çıktı formatı: table, json, pdf, SARIF, CycloneDX, SPDX
+- Policy enforcement (OPA/Rego)
+- Secret ve license tarama
+- Kubernetes ve repository tarama (yeni sürümlerde)
+- Modern, renkli ve özetli tablo raporu
+- Multi-arch ve Docker optimizasyonları
 
 ## 🚀 Features
 
