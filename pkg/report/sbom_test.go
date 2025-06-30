@@ -3,6 +3,7 @@ package report
 import (
 	"encoding/json"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/aquasecurity/trivy/pkg/types"
@@ -91,33 +92,30 @@ func TestWriteSPDX(t *testing.T) {
 	}
 
 	// Verify file was created
-	fileName := "test-spdx-spdx.json"
+	fileName := "test-spdx-spdx.spdx"
 	if _, err := os.Stat(fileName); os.IsNotExist(err) {
 		t.Fatalf("SPDX file was not created: %s", fileName)
 	}
 
-	// Verify JSON structure
+	// Verify file content (tag-value format, not JSON)
 	data, err := os.ReadFile(fileName)
 	if err != nil {
 		t.Fatalf("Failed to read SPDX file: %v", err)
 	}
 
-	var doc SPDXDocument
-	if err := json.Unmarshal(data, &doc); err != nil {
-		t.Fatalf("Failed to parse SPDX JSON: %v", err)
+	content := string(data)
+
+	// Verify basic structure in tag-value format
+	if !strings.Contains(content, "SPDXVersion: SPDX-2.3") {
+		t.Error("Expected SPDXVersion 'SPDX-2.3' in content")
 	}
 
-	// Verify basic structure
-	if doc.SPDXVersion != "SPDX-2.3" {
-		t.Errorf("Expected SPDXVersion 'SPDX-2.3', got '%s'", doc.SPDXVersion)
+	if !strings.Contains(content, "DataLicense: CC0-1.0") {
+		t.Error("Expected DataLicense 'CC0-1.0' in content")
 	}
 
-	if doc.DataLicense != "CC0-1.0" {
-		t.Errorf("Expected DataLicense 'CC0-1.0', got '%s'", doc.DataLicense)
-	}
-
-	if len(doc.Packages) == 0 {
-		t.Error("Expected packages to be present")
+	if !strings.Contains(content, "PackageName: openssl") {
+		t.Error("Expected package name in content")
 	}
 
 	// Clean up
