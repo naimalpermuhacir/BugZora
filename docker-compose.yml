@@ -2,18 +2,90 @@ version: '3.8'
 
 services:
   bugzora:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BUILDKIT_INLINE_CACHE: 1
     image: bugzora:latest
     container_name: bugzora-scanner
-    volumes:
-      - .:/scan-target:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    environment:
-      - TZ=UTC
-    command: ["--help"]
-    restart: unless-stopped
+    hostname: bugzora-scanner
+    
+    # Security options
     security_opt:
       - no-new-privileges:true
-    read_only: false
-    tmpfs:
-      - /tmp 
+      - seccomp:unconfined
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "./bugzora", "--help"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # Volumes
+    volumes:
+      - ./:/scan-target:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - trivy-cache:/tmp/trivy-cache
+      - /tmp:/tmp:rw
+    
+    # Environment variables
+    environment:
+      - TZ=UTC
+      - TRIVY_CACHE_DIR=/tmp/trivy-cache
+      - BUGZORA_VERSION=1.2.0
+      - TRIVY_QUIET=true
+      - TRIVY_INSECURE=false
+    
+    # Network
+    network_mode: host
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Read-only root filesystem
+    read_only: true
+    
+    # Capabilities
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    
+    # User
+    user: "1000:1000"
+    
+    # Working directory
+    working_dir: /app
+    
+    # Default command
+    command: ["--help"]
+    
+    # Labels
+    labels:
+      - "com.bugzora.description=Security scanning tool"
+      - "com.bugzora.version=1.2.0"
+      - "com.bugzora.maintainer=bugzora@bugzora.dev"
+
+# Named volumes
+volumes:
+  trivy-cache:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: size=1G

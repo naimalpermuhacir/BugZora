@@ -8,9 +8,11 @@ import (
 	"context"
 	"io/fs"
 	"log"
+	"os"
 
 	"github.com/spf13/cobra"
 
+	"bugzora/pkg/policy"
 	"bugzora/pkg/report"
 	"bugzora/pkg/vuln"
 )
@@ -22,25 +24,78 @@ var imageCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		imageName := args[0]
-		output, _ := cmd.Flags().GetString("output")
-		quiet, _ := cmd.Flags().GetBool("quiet")
 
 		log.Printf("Scanning image: %s... (this might take a while)", imageName)
-		scanReport, err := vuln.ScanImage(context.Background(), imageName, quiet)
+
+		trivyArgs := buildTrivyArgs("image", imageName)
+
+		scanReport, err := vuln.ScanImageWithArgs(context.Background(), imageName, trivyArgs, quiet)
 		if err != nil {
 			log.Fatalf("Image scan error: %v", err)
 		}
 
-		if err := report.WriteResults(scanReport.Results, output, imageName); err != nil {
-			log.Fatalf("Failed to write report: %v", err)
+		if policyFile != "" {
+			pol, err := policy.LoadPolicy(policyFile)
+			if err != nil {
+				log.Fatalf("Failed to load policy file: %v", err)
+			}
+			var vulns []policy.Vulnerability
+			for _, result := range scanReport.Results {
+				for _, v := range result.Vulnerabilities {
+					vulns = append(vulns, policy.Vulnerability{
+						VulnerabilityID: v.VulnerabilityID,
+						Severity:        v.Severity,
+						PackageName:     v.PkgName,
+						PackageVersion:  v.InstalledVersion,
+						Title:           v.Title,
+						Description:     v.Description,
+						Metadata:        map[string]string{"target": result.Target, "type": string(result.Type)},
+					})
+				}
+			}
+			res := policy.EvaluatePolicy(pol, vulns)
+			if !res.Passed {
+				log.Printf("\n\033[31mPolicy Violations Detected!\033[0m")
+				for _, v := range res.Violations {
+					log.Printf("- %s", v)
+				}
+				os.Exit(3)
+			}
+			if len(res.Warnings) > 0 {
+				log.Printf("\n\033[33mPolicy Warnings:\033[0m")
+				for _, w := range res.Warnings {
+					log.Printf("- %s", w)
+				}
+			}
+		}
+
+		if !quiet {
+			report.PrintTable(imageName, scanReport.Results)
+		}
+
+		if outputFormat != "table" {
+			if err := report.WriteReport(imageName, scanReport.Results, outputFormat); err != nil {
+				log.Fatalf("Failed to write report: %v", err)
+			}
+		}
+
+		if len(scanReport.Results) > 0 {
+			totalVulns := 0
+			for _, result := range scanReport.Results {
+				totalVulns += len(result.Vulnerabilities)
+			}
+			if totalVulns > 0 {
+				log.Printf("\nFound %d vulnerabilities in %s", totalVulns, imageName)
+				if exitCode != 0 {
+					os.Exit(exitCode)
+				}
+			}
 		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(imageCmd)
-	imageCmd.Flags().StringP("output", "o", "table", "Output format (table, json, pdf)")
-	imageCmd.Flags().BoolP("quiet", "q", false, "suppress progress messages")
 }
 
 // LayerFS is a simple fs.FS implementation that overlays tar layers.

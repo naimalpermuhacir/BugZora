@@ -1,311 +1,245 @@
 <!-- CI debug adımı testi için dummy değişiklik -->
-# BugZora
+# BugZora 🔒
 
-A comprehensive security scanning tool for container images and filesystems, built with Go.
+A comprehensive security scanner for container images and filesystems, built on top of Trivy with enhanced reporting and policy enforcement capabilities.
 
-## Features
+## ✨ Features
 
-- **Container Image Scanning**: Scan Docker images for vulnerabilities
-- **Filesystem Scanning**: Scan local filesystems for security issues
-- **Multiple Output Formats**: JSON, PDF, and colored table output
-- **Cross-Platform Support**: Linux, macOS, and Windows
-- **Automated CI/CD**: GitHub Actions integration with security scanning
-- **Modern Report Summary**: A summary table at the top of the terminal output for quick overview.
-- **Bold Table Headers & Summary**: Table headers and summary lines are bold for better readability.
-- **Extra Spacing Between Tables**: Visually clear separation between different result tables in terminal output.
-- **Legend Section**: Explains table symbols for clarity.
+- **Container Image Scanning**: Scan Docker images from any registry
+- **Filesystem Analysis**: Security analysis of local filesystems
+- **Multiple Output Formats**: Table, JSON, PDF, CycloneDX, SPDX
+- **Policy Enforcement**: OPA/Rego-based security policies
+- **Comprehensive References**: OS-specific vulnerability links
+- **Docker Integration**: Optimized Docker images with multi-arch support
+- **SBOM Generation**: Software Bill of Materials in multiple formats
+- **Full Trivy CLI Support**: All Trivy parameters and options
 
-## 🚀 Features
+## 🚀 Quick Start
 
-- **Multiple Format Support**: Generate reports in JSON, PDF, and table formats
-- **Container Image Scanning**: Scan images from Docker Hub and other registries
-- **Filesystem Scanning**: Scan local filesystems for vulnerabilities
-- **OS Detection**: Automatic OS detection and appropriate reference links
-- **Multi-Reference System**: Comprehensive reference links for each vulnerability
-- **Colored Terminal Output**: Readable and professional table format
-- **Detailed Reporting**: Vulnerability statistics and metadata
+### Installation
+
+```bash
+# Download latest release
+curl -L https://github.com/naimalpermuhacir/BugZora/releases/latest/download/bugzora_$(uname -s)_$(uname -m).tar.gz | tar -xz
+sudo mv bugzora /usr/local/bin/
+
+# Or use Docker
+docker pull naimalpermuhacir/bugzora:latest
+```
+
+### Basic Usage
+
+```bash
+# Scan a container image
+bugzora image alpine:latest
+
+# Scan a filesystem
+bugzora fs /path/to/filesystem
+
+# Generate JSON report
+bugzora image nginx:latest --format json
+
+# Generate SBOM
+bugzora image ubuntu:20.04 --format cyclonedx
+```
 
 ## 📋 Requirements
 
-- Trivy CLI tool (automatically installed by installation scripts)
-- Internet connection (for database updates)
+- **Go 1.21+** (for development)
+- **Trivy CLI** (automatically installed in Docker)
+- **Docker** (optional, for containerized usage)
 
-## 🛠️ Installation
+## 🔧 Advanced Usage
 
-### Quick Installation (Recommended)
+### Policy Enforcement
 
-#### Linux & macOS
 ```bash
-# Download and run the installation script
-curl -fsSL https://raw.githubusercontent.com/naimalpermuhacir/BugZora/master/install.sh | bash
+# Create default policy
+bugzora policy create policy.yaml
 
-# Or download first, then run
-wget https://raw.githubusercontent.com/naimalpermuhacir/BugZora/master/install.sh
-chmod +x install.sh
-./install.sh
+# Scan with policy enforcement
+bugzora image alpine:latest --policy-file policy.yaml
 ```
 
-#### Windows
-```cmd
-# Using PowerShell (recommended)
-powershell -ExecutionPolicy Bypass -Command "Invoke-Expression (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/naimalpermuhacir/BugZora/master/install.ps1').Content"
+### Multiple Output Formats
 
-# Or download and run manually
-# 1. Download install.ps1
-# 2. Right-click and "Run with PowerShell"
-```
-
-```batch
-# Using Command Prompt
-# Download install.bat and double-click to run
-```
-
-### Manual Installation
-
-#### Prerequisites
-1. **Install Trivy**:
    ```bash
-   # macOS
-   brew install trivy
-   
-   # Ubuntu/Debian
-   sudo apt-get install wget apt-transport-https gnupg lsb-release
-   wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
-   echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
-   sudo apt-get update
-   sudo apt-get install trivy
-   
-   # Alpine
-   sudo apk update
-   sudo apk add --no-cache trivy
-   
-   # Fedora
-   sudo dnf install -y dnf-plugins-core
-   sudo dnf config-manager --add-repo https://aquasecurity.github.io/trivy-repo/rpm/releases/fedora/trivy.repo
-   sudo dnf install -y trivy
-   
-   # CentOS/RHEL
-   sudo yum install -y yum-utils
-   sudo yum-config-manager --add-repo https://aquasecurity.github.io/trivy-repo/rpm/releases/centos/trivy.repo
-   sudo yum install -y trivy
-   
-   # Other Linux
-   # See: https://aquasecurity.github.io/trivy/latest/getting-started/installation/
-   ```
+# JSON report
+bugzora image nginx:latest --format json --output report.json
 
-2. **Install BugZora**:
-   ```bash
-   git clone https://github.com/naimalpermuhacir/BugZora.git
-   cd BugZora
-   go mod download
-   go build -o bugzora .
-   ```
+# PDF report
+bugzora image ubuntu:20.04 --format pdf
 
-### Platform-Specific Notes
+# CycloneDX SBOM
+bugzora fs /app --format cyclonedx
 
-#### macOS
-- **M1/M2 Macs**: ARM64 builds are automatically detected and installed
-- **Intel Macs**: x86_64 builds are used
-- **Homebrew**: Trivy is automatically installed via Homebrew if available
-
-#### Linux
-- **Ubuntu/Debian, Alpine, Fedora, CentOS, RHEL**: Trivy is automatically installed by the script using the official repositories
-- **Other distributions**: Manual Trivy installation may be required (see Trivy docs)
-- **ARM64 support**: Full support for ARM64 architectures
-
-#### Windows
-- **PowerShell**: Recommended installation method
-- **Command Prompt**: Alternative batch script available
-- **Administrator rights**: May be required for PATH modifications
-- **Antivirus**: May flag the executable; add to exclusions if needed
-
-## 🎯 Usage
-
-### Quick Start
-
-```bash
-# Check available commands
-bugzora --help
-
-# Scan a container image (table output)
-bugzora image alpine:latest
-
-# Scan from a private registry
-bugzora image registry.example.com/myapp:v1.0.0
-
-# Scan with quiet mode
-bugzora image nginx:alpine -q
-
-# Scan a filesystem
-bugzora fs ./my-application
-
-# Scan filesystem with quiet mode
-bugzora fs /path/to/filesystem -q
+# SPDX SBOM
+bugzora image alpine:latest --format spdx
 ```
 
-### Container Image Scanning
+### Advanced Scanning Options
 
 ```bash
-# Table format output (default)
-bugzora image ubuntu:20.04
+# Scan with specific severities
+bugzora image nginx:latest --severity HIGH,CRITICAL
 
-# JSON format output
-bugzora image ubuntu:20.04 --output json
+# Skip unfixed vulnerabilities
+bugzora fs /app --ignore-unfixed
 
-# PDF format output
-bugzora image ubuntu:20.04 --output pdf
+# Include all packages
+bugzora image alpine:latest --list-all-pkgs
 
-# Quiet mode
-bugzora image ubuntu:20.04 --quiet
+# Offline scanning
+bugzora fs /app --offline-scan
 ```
 
-### Filesystem Scanning
+## 🐳 Docker Usage
+
+### Quick Scan
 
 ```bash
-# Table format output
-bugzora fs /path/to/filesystem
+# Scan image
+docker run --rm naimalpermuhacir/bugzora:latest image alpine:latest
 
-# JSON format output
-bugzora fs /path/to/filesystem --output json
+# Scan filesystem
+docker run --rm -v /path:/scan naimalpermuhacir/bugzora:latest fs /scan
+```
 
-# PDF format output
-bugzora fs /path/to/filesystem --output pdf
+### Production Usage
+
+```bash
+# Build optimized image
+./build-docker.sh
+
+# Run security scan
+./docker-security-scan.sh naimalpermuhacir/bugzora:latest
 ```
 
 ## 📊 Output Formats
 
-### 1. Table Format (Default)
-Provides colored, readable table output in terminal:
-- Vulnerability details
-- Multiple reference links
-- Colored severity indicators
-- Summary statistics
-
-### 2. JSON Format
-Generates comprehensive JSON report:
-- Scan metadata
-- Detailed vulnerability information
-- Multiple reference links
-- Statistical summary
-- Configurable format
-
-### 3. PDF Format
-Creates professional PDF report:
-- Turkish titles and descriptions
-- Colored severity indicators
-- Table format vulnerability list
-- Reference links
-- Summary statistics
-
-## 🔗 Reference System
-
-The following reference types are automatically generated for each vulnerability:
-
-### OS-Specific References
-- **Ubuntu**: Ubuntu Security, Ubuntu Tracker
-- **Debian**: Debian Security Tracker, Debian Security
-- **Alpine**: Alpine Security
-- **Red Hat**: Red Hat Security, Red Hat Bugzilla
-
-### General CVE References
-- **AquaSec**: Primary vulnerability analysis
-- **CVE Details**: Comprehensive CVE information
-- **MITRE**: Official CVE database
-- **NVD**: National Vulnerability Database
-
-## 📁 Output Files
-
-Reports are generated with the following naming convention:
-- `report-{target}.json` - JSON report
-- `report-{target}.pdf` - PDF report
-
-Examples:
-- `report-ubuntu-20.04.json`
-- `report-ubuntu-20.04.pdf`
-- `report-test-fs.json`
-
-## 🎨 Sample Outputs
-
-### Table Format
+### Table Output (Default)
 ```
---- Vulnerability Scan Report for: ubuntu:20.04 ---
-+----------+------------------+----------+------------------+------------------+----------------------------+
-| PACKAGE  | VULNERABILITY ID | SEVERITY |  INSTALLED VER   |    FIXED VER     |             TITLE          |
-+----------+------------------+----------+------------------+------------------+----------------------------+
-| libc-bin | CVE-2025-4802    | MEDIUM   | 2.31-0ubuntu9.17 | 2.31-0ubuntu9.18 | glibc: static setuid binary |
-|          |                  |          |                  |                  | dlopen may incorrectly search|
-|          |                  |          |                  |                  | LD_LIBRARY_PATH             |
-+----------+------------------+----------+------------------+------------------+----------------------------+
+Report Summary
+┌─────────────┬──────┬─────────────────┬─────────┐
+│ Target      │ Type │ Vulnerabilities │ Secrets │
+├─────────────┼──────┼─────────────────┼─────────┤
+│ alpine:3.18 │ os   │ 5               │ -       │
+└─────────────┴──────┴─────────────────┴─────────┘
+
+--- Vulnerability Scan Report for: alpine:3.18 ---
+🎯 Target: alpine:3.18 (alpine)
+
+┌─────────────┬─────────────────┬──────────┬─────────────────┬─────────────┬─────────────────────────────────────┬─────────────────────────────────────┐
+│ Package     │ Vulnerability ID│ Severity │ Installed Ver.  │ Fixed Ver.  │ Title                               │ Reference                           │
+├─────────────┼─────────────────┼──────────┼─────────────────┼─────────────┼─────────────────────────────────────┼─────────────────────────────────────┤
+│ openssl     │ CVE-2023-5678   │ HIGH     │ 3.0.8-r0        │ 3.0.9-r0    │ OpenSSL vulnerability description   │ 🔍 Primary: https://avd.aquasec.com │
+└─────────────┴─────────────────┴──────────┴─────────────────┴─────────────┴─────────────────────────────────────┴─────────────────────────────────────┘
 ```
 
-### JSON Format
+### JSON Output
 ```json
 {
   "scan_info": {
     "scanner": "bugzora",
-    "version": "1.0.0",
-    "scan_time": "2025-06-24T11:22:10.657964+03:00"
+    "version": "1.3.0",
+    "scan_time": "2024-01-15T10:30:00Z"
   },
+  "results": [
+    {
+      "target": "alpine:3.18",
+      "type": "alpine",
+      "vulnerabilities": [...],
   "summary": {
     "critical": 0,
-    "high": 0,
-    "medium": 2,
+        "high": 2,
+        "medium": 3,
     "low": 0,
     "unknown": 0,
-    "total": 2
-  },
-  "results": [...]
+        "total": 5
+      }
+    }
+  ]
 }
 ```
 
-## 🔧 Development
+### SBOM Output
+- **CycloneDX**: Industry-standard JSON format
+- **SPDX**: Tag-value format for compliance
+
+## 🔒 Security Features
+
+- **Non-root container execution**
+- **Minimal attack surface** with Alpine Linux
+- **Multi-stage builds** for smaller images
+- **Security scanning** of container images
+- **Policy-based enforcement**
+- **Comprehensive vulnerability references**
+
+## 🛠️ Development
 
 ### Project Structure
 ```
 BugZora/
 ├── cmd/           # CLI commands
-├── pkg/           # Main packages
+├── pkg/           # Core packages
 │   ├── report/    # Reporting module
-│   └── vuln/      # Vulnerability scanning module
+│   ├── vuln/      # Vulnerability scanning
+│   └── policy/    # Policy enforcement
 ├── db/            # Trivy database
-└── main.go        # Main application
+└── main.go        # Application entry
 ```
 
-### Dependencies
-- `github.com/spf13/cobra` - CLI framework
-- `github.com/aquasecurity/trivy` - Vulnerability scanning engine
-- `github.com/olekukonko/tablewriter` - Table creation
-- `github.com/fatih/color` - Colored terminal output
-- `github.com/jung-kurt/gofpdf` - PDF generation
+### Building from Source
+
+```bash
+# Clone repository
+git clone https://github.com/naimalpermuhacir/BugZora.git
+cd BugZora
+
+# Build binary
+go build -o bugzora .
+
+# Run tests
+go test ./...
+
+# Build Docker image
+./build-docker.sh
+```
+
+## 📚 Documentation
+
+- [Usage Guide](how_to_use.md) - Detailed usage instructions
+- [Docker Guide](DOCKER.md) - Docker usage and optimization
+- [Project State](PROJECT_STATE.md) - Current project status
 
 ## 🤝 Contributing
 
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the `LICENSE` file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🆘 Support
 
-For issues:
-1. Use the GitHub Issues page
-2. Include detailed error messages and logs
-3. Specify your operating system and versions
+For issues and questions:
+1. Check the [documentation](how_to_use.md)
+2. Search existing [GitHub Issues](https://github.com/naimalpermuhacir/BugZora/issues)
+3. Create a new issue with detailed information
 
-## 🔄 Updates
+## 🔄 Changelog
 
-- **v1.0.0**: Initial release - basic scanning features
-- **v1.1.0**: Multi-reference system added
-- **v1.2.0**: JSON and PDF format support added
-- **v1.3.0**: Advanced reporting and metadata added
+- **v1.3.0**: Full Trivy CLI support, SBOM generation, policy enforcement
+- **v1.2.0**: Docker optimizations, security hardening, multi-arch support
+- **v1.1.0**: Enhanced reporting, multiple reference systems
+- **v1.0.0**: Initial release with basic scanning capabilities
 
----
+## 🙏 Acknowledgments
 
-**BugZora** - Security Scanning Application  
-Copyright © 2025 BugZora <bugzora@bugzora.dev>  
-MIT License 
+- [Trivy](https://github.com/aquasecurity/trivy) - The underlying scanning engine
+- [Cobra](https://github.com/spf13/cobra) - CLI framework
+- [Aqua Security](https://www.aquasec.com/) - Vulnerability database 

@@ -1,257 +1,180 @@
-# BugZora - Güvenlik Tarama Uygulaması
+# BugZora 🔒
 
-Copyright © 2025 BugZora <bugzora@bugzora.dev>
+Container image'ları ve dosya sistemleri için kapsamlı güvenlik tarayıcısı. Trivy üzerine inşa edilmiş, gelişmiş raporlama ve policy enforcement özellikleri ile.
 
-Bu uygulama, konteyner imajları ve dosya sistemlerini tarayarak güvenlik açıklarını tespit eden gelişmiş bir güvenlik tarama aracıdır. Trivy altyapısını kullanarak kapsamlı zafiyet analizi yapar ve sonuçları farklı formatlarda sunar.
+## ✨ Özellikler
 
-## 🚀 Özellikler
+- **Container Image Tarama**: Herhangi bir registry'den Docker image'larını tara
+- **Dosya Sistemi Analizi**: Yerel dosya sistemlerinin güvenlik analizi
+- **Çoklu Çıktı Formatları**: Tablo, JSON, PDF, CycloneDX, SPDX
+- **Policy Enforcement**: OPA/Rego tabanlı güvenlik politikaları
+- **Kapsamlı Referanslar**: İşletim sistemi özel zafiyet linkleri
+- **Docker Entegrasyonu**: Çoklu mimari desteği ile optimize edilmiş Docker image'ları
+- **SBOM Üretimi**: Çoklu formatta Yazılım Malzeme Listesi
+- **Tam Trivy CLI Desteği**: Tüm Trivy parametreleri ve seçenekleri
 
-- **Çoklu Format Desteği**: JSON, PDF ve tablo formatlarında rapor oluşturma
-- **Konteyner İmaj Taraması**: Docker Hub ve diğer registry'lerden imaj tarama
-- **Dosya Sistemi Taraması**: Yerel dosya sistemlerini tarama
-- **İşletim Sistemi Tespiti**: Otomatik OS tespiti ve uygun referans linkleri
-- **Çoklu Referans Sistemi**: Her zafiyet için kapsamlı referans linkleri
-- **Renkli Terminal Çıktısı**: Okunabilir ve profesyonel tablo formatı
-- **Detaylı Raporlama**: Zafiyet istatistikleri ve metadata
-- **Yeni Stil Rapor Özeti**: Terminal çıktısının başında hızlı genel bakış için özet tablo.
-- **Kalın Tablo Başlıkları & Özet**: Tablo başlıkları ve özet satırları daha okunaklı olması için kalın.
-- **Tablolar Arası Ekstra Boşluk**: Terminalde farklı tablo geçişleri daha belirgin.
-- **Açıklamalı Legend Alanı**: Tablo sembollerinin anlamı için açıklama.
+## 🚀 Hızlı Başlangıç
+
+### Kurulum
+
+```bash
+# En son sürümü indir
+curl -L https://github.com/naimalpermuhacir/BugZora/releases/latest/download/bugzora_$(uname -s)_$(uname -m).tar.gz | tar -xz
+sudo mv bugzora /usr/local/bin/
+
+# Veya Docker kullan
+docker pull naimalpermuhacir/bugzora:latest
+```
+
+### Temel Kullanım
+
+```bash
+# Container image tara
+bugzora image alpine:latest
+
+# Dosya sistemi tara
+bugzora fs /path/to/filesystem
+
+# JSON raporu oluştur
+bugzora image nginx:latest --format json
+
+# SBOM oluştur
+bugzora image ubuntu:20.04 --format cyclonedx
+```
 
 ## 📋 Gereksinimler
 
-- Trivy CLI aracı (kurulum scriptleri tarafından otomatik kurulur)
-- İnternet bağlantısı (veritabanı güncellemeleri için)
+- **Go 1.21+** (geliştirme için)
+- **Trivy CLI** (Docker'da otomatik kurulur)
+- **Docker** (isteğe bağlı, containerized kullanım için)
 
-## 🛠️ Kurulum
+## 🔧 Gelişmiş Kullanım
 
-### Hızlı Kurulum (Önerilen)
-
-#### Linux & macOS
-```bash
-# Kurulum scriptini indir ve çalıştır
-curl -fsSL https://raw.githubusercontent.com/naimalpermuhacir/BugZora/master/install.sh | bash
-
-# Veya önce indir, sonra çalıştır
-wget https://raw.githubusercontent.com/naimalpermuhacir/BugZora/master/install.sh
-chmod +x install.sh
-./install.sh
-```
-
-#### Windows
-```cmd
-# PowerShell kullanarak (önerilen)
-powershell -ExecutionPolicy Bypass -Command "Invoke-Expression (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/naimalpermuhacir/BugZora/master/install.ps1').Content"
-
-# Veya manuel olarak indir ve çalıştır
-# 1. install.ps1 dosyasını indir
-# 2. Sağ tıkla "PowerShell ile Çalıştır"
-```
-
-```batch
-# Command Prompt kullanarak
-# install.bat dosyasını indir ve çift tıklayarak çalıştır
-```
-
-### Manuel Kurulum
-
-#### Ön Gereksinimler
-1. **Trivy Kurulumu**:
-   ```bash
-   # macOS
-   brew install trivy
-   
-   # Ubuntu/Debian
-   sudo apt-get install wget apt-transport-https gnupg lsb-release
-   wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
-   echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
-   sudo apt-get update
-   sudo apt-get install trivy
-   
-   # Alpine
-   sudo apk update
-   sudo apk add --no-cache trivy
-   
-   # Fedora
-   sudo dnf install -y dnf-plugins-core
-   sudo dnf config-manager --add-repo https://aquasecurity.github.io/trivy-repo/rpm/releases/fedora/trivy.repo
-   sudo dnf install -y trivy
-   
-   # CentOS/RHEL
-   sudo yum install -y yum-utils
-   sudo yum-config-manager --add-repo https://aquasecurity.github.io/trivy-repo/rpm/releases/centos/trivy.repo
-   sudo yum install -y trivy
-   
-   # Diğer Linux
-   # Bkz: https://aquasecurity.github.io/trivy/latest/getting-started/installation/
-   ```
-
-2. **BugZora Kurulumu**:
-   ```bash
-   git clone https://github.com/naimalpermuhacir/BugZora.git
-   cd BugZora
-   go mod download
-   go build -o bugzora .
-   ```
-
-### Platform Özel Notları
-
-#### macOS
-- **M1/M2 Mac**: ARM64 build'leri otomatik tespit edilir ve kurulur
-- **Intel Mac**: x86_64 build'leri kullanılır
-- **Homebrew**: Mevcutsa Trivy otomatik olarak Homebrew ile kurulur
-
-#### Linux
-- **Ubuntu/Debian, Alpine, Fedora, CentOS, RHEL**: Trivy script tarafından resmi depolardan otomatik kurulur
-- **Diğer dağıtımlar**: Trivy manuel kurulum gerekebilir (bkz: Trivy dökümantasyonu)
-- **ARM64 desteği**: ARM64 mimarileri için tam destek
-
-#### Windows
-- **PowerShell**: Önerilen kurulum yöntemi
-- **Command Prompt**: Alternatif batch script mevcut
-- **Yönetici hakları**: PATH değişiklikleri için gerekebilir
-- **Antivirüs**: Executable'ı işaretleyebilir; gerekirse istisnalara ekleyin
-
-## 🎯 Kullanım
-
-### Hızlı Başlangıç
+### Policy Enforcement
 
 ```bash
-# Mevcut komutları kontrol et
-bugzora --help
+# Varsayılan policy oluştur
+bugzora policy create policy.yaml
 
-# Konteyner imajı tara (tablo çıktısı)
-bugzora image alpine:latest
+# Policy enforcement ile tara
+bugzora image alpine:latest --policy-file policy.yaml
+```
 
-# Özel registry'den tara
-bugzora image registry.example.com/myapp:v1.0.0
+### Çoklu Çıktı Formatları
 
-# Sessiz modda tara
-bugzora image nginx:alpine -q
+```bash
+# JSON raporu
+bugzora image nginx:latest --format json --output report.json
+
+# PDF raporu
+bugzora image ubuntu:20.04 --format pdf
+
+# CycloneDX SBOM
+bugzora fs /app --format cyclonedx
+
+# SPDX SBOM
+bugzora image alpine:latest --format spdx
+```
+
+### Gelişmiş Tarama Seçenekleri
+
+   ```bash
+# Belirli severity'ler ile tara
+bugzora image nginx:latest --severity HIGH,CRITICAL
+
+# Düzeltilmemiş zafiyetleri atla
+bugzora fs /app --ignore-unfixed
+
+# Tüm paketleri dahil et
+bugzora image alpine:latest --list-all-pkgs
+
+# Çevrimdışı tarama
+bugzora fs /app --offline-scan
+```
+
+## 🐳 Docker Kullanımı
+
+### Hızlı Tarama
+
+```bash
+# Image tara
+docker run --rm naimalpermuhacir/bugzora:latest image alpine:latest
 
 # Dosya sistemi tara
-bugzora fs ./my-application
-
-# Dosya sistemini sessiz modda tara
-bugzora fs /path/to/filesystem -q
+docker run --rm -v /path:/scan naimalpermuhacir/bugzora:latest fs /scan
 ```
 
-### Konteyner İmaj Taraması
+### Üretim Kullanımı
 
 ```bash
-# Tablo formatında çıktı (varsayılan)
-bugzora image ubuntu:20.04
+# Optimize edilmiş image oluştur
+./build-docker.sh
 
-# JSON formatında çıktı
-bugzora image ubuntu:20.04 --output json
-
-# PDF formatında çıktı
-bugzora image ubuntu:20.04 --output pdf
-
-# Sessiz mod
-bugzora image ubuntu:20.04 --quiet
-```
-
-### Dosya Sistemi Taraması
-
-```bash
-# Tablo formatında çıktı
-bugzora fs /path/to/filesystem
-
-# JSON formatında çıktı
-bugzora fs /path/to/filesystem --output json
-
-# PDF formatında çıktı
-bugzora fs /path/to/filesystem --output pdf
+# Güvenlik taraması çalıştır
+./docker-security-scan.sh naimalpermuhacir/bugzora:latest
 ```
 
 ## 📊 Çıktı Formatları
 
-### 1. Tablo Formatı (Varsayılan)
-Terminalde renkli, okunabilir tablo formatında çıktı verir:
-- Zafiyet detayları
-- Çoklu referans linkleri
-- Renkli severity göstergeleri
-- Özet istatistikler
-
-### 2. JSON Formatı
-Kapsamlı JSON raporu oluşturur:
-- Tarama metadata'sı
-- Detaylı zafiyet bilgileri
-- Çoklu referans linkleri
-- İstatistiksel özet
-- Yapılandırılabilir format
-
-### 3. PDF Formatı
-Profesyonel PDF raporu oluşturur:
-- Türkçe başlıklar ve açıklamalar
-- Renkli severity göstergeleri
-- Tablo formatında zafiyet listesi
-- Referans linkleri
-- Özet istatistikler
-
-## 🔗 Referans Sistemi
-
-Her zafiyet için aşağıdaki referans türleri otomatik olarak oluşturulur:
-
-### OS-Specific Referanslar
-- **Ubuntu**: Ubuntu Security, Ubuntu Tracker
-- **Debian**: Debian Security Tracker, Debian Security
-- **Alpine**: Alpine Security
-- **Red Hat**: Red Hat Security, Red Hat Bugzilla
-
-### Genel CVE Referansları
-- **AquaSec**: Birincil zafiyet analizi
-- **CVE Details**: Kapsamlı CVE bilgileri
-- **MITRE**: Resmi CVE veritabanı
-- **NVD**: National Vulnerability Database
-
-## 📁 Çıktı Dosyaları
-
-Raporlar aşağıdaki isimlendirme kuralıyla oluşturulur:
-- `report-{target}.json` - JSON raporu
-- `report-{target}.pdf` - PDF raporu
-
-Örnek:
-- `report-ubuntu-20.04.json`
-- `report-ubuntu-20.04.pdf`
-- `report-test-fs.json`
-
-## 🎨 Örnek Çıktılar
-
-### Tablo Formatı
+### Tablo Çıktısı (Varsayılan)
 ```
---- Vulnerability Scan Report for: ubuntu:20.04 ---
-+----------+------------------+----------+------------------+------------------+----------------------------+
-| PACKAGE  | VULNERABILITY ID | SEVERITY |  INSTALLED VER   |    FIXED VER     |             TITLE          |
-+----------+------------------+----------+------------------+------------------+----------------------------+
-| libc-bin | CVE-2025-4802    | MEDIUM   | 2.31-0ubuntu9.17 | 2.31-0ubuntu9.18 | glibc: static setuid binary |
-|          |                  |          |                  |                  | dlopen may incorrectly search|
-|          |                  |          |                  |                  | LD_LIBRARY_PATH             |
-+----------+------------------+----------+------------------+------------------+----------------------------+
+Report Summary
+┌─────────────┬──────┬─────────────────┬─────────┐
+│ Target      │ Type │ Vulnerabilities │ Secrets │
+├─────────────┼──────┼─────────────────┼─────────┤
+│ alpine:3.18 │ os   │ 5               │ -       │
+└─────────────┴──────┴─────────────────┴─────────┘
+
+--- Vulnerability Scan Report for: alpine:3.18 ---
+🎯 Target: alpine:3.18 (alpine)
+
+┌─────────────┬─────────────────┬──────────┬─────────────────┬─────────────┬─────────────────────────────────────┬─────────────────────────────────────┐
+│ Package     │ Vulnerability ID│ Severity │ Installed Ver.  │ Fixed Ver.  │ Title                               │ Reference                           │
+├─────────────┼─────────────────┼──────────┼─────────────────┼─────────────┼─────────────────────────────────────┼─────────────────────────────────────┤
+│ openssl     │ CVE-2023-5678   │ HIGH     │ 3.0.8-r0        │ 3.0.9-r0    │ OpenSSL vulnerability description   │ 🔍 Primary: https://avd.aquasec.com │
+└─────────────┴─────────────────┴──────────┴─────────────────┴─────────────┴─────────────────────────────────────┴─────────────────────────────────────┘
 ```
 
-### JSON Formatı
+### JSON Çıktısı
 ```json
 {
   "scan_info": {
     "scanner": "bugzora",
-    "version": "1.0.0",
-    "scan_time": "2025-06-24T11:22:10.657964+03:00"
+    "version": "1.3.0",
+    "scan_time": "2024-01-15T10:30:00Z"
   },
+  "results": [
+    {
+      "target": "alpine:3.18",
+      "type": "alpine",
+      "vulnerabilities": [...],
   "summary": {
     "critical": 0,
-    "high": 0,
-    "medium": 2,
+        "high": 2,
+        "medium": 3,
     "low": 0,
     "unknown": 0,
-    "total": 2
-  },
-  "results": [...]
+        "total": 5
+      }
+    }
+  ]
 }
 ```
 
-## 🔧 Geliştirme
+### SBOM Çıktısı
+- **CycloneDX**: Endüstri standardı JSON formatı
+- **SPDX**: Uyumluluk için tag-value formatı
+
+## 🔒 Güvenlik Özellikleri
+
+- **Non-root container çalıştırma**
+- **Alpine Linux ile minimal saldırı yüzeyi**
+- **Daha küçük image'lar için multi-stage build**
+- **Container image'larının güvenlik taraması**
+- **Policy tabanlı enforcement**
+- **Kapsamlı zafiyet referansları**
+
+## 🛠️ Geliştirme
 
 ### Proje Yapısı
 ```
@@ -259,46 +182,63 @@ BugZora/
 ├── cmd/           # CLI komutları
 ├── pkg/           # Ana paketler
 │   ├── report/    # Raporlama modülü
-│   └── vuln/      # Zafiyet tarama modülü
+│   ├── vuln/      # Zafiyet tarama modülü
+│   └── policy/    # Policy enforcement
 ├── db/            # Trivy veritabanı
 └── main.go        # Ana uygulama
 ```
 
-### Bağımlılıklar
-- `github.com/spf13/cobra` - CLI framework
-- `github.com/aquasecurity/trivy` - Zafiyet tarama motoru
-- `github.com/olekukonko/tablewriter` - Tablo oluşturma
-- `github.com/fatih/color` - Renkli terminal çıktısı
-- `github.com/jung-kurt/gofpdf` - PDF oluşturma
+### Kaynak Koddan Derleme
+
+```bash
+# Repository'yi klonla
+git clone https://github.com/naimalpermuhacir/BugZora.git
+cd BugZora
+
+# Binary oluştur
+go build -o bugzora .
+
+# Testleri çalıştır
+go test ./...
+
+# Docker image oluştur
+./build-docker.sh
+```
+
+## 📚 Dokümantasyon
+
+- [Kullanım Kılavuzu](how_to_use_tr.md) - Detaylı kullanım talimatları
+- [Docker Kılavuzu](DOCKER.md) - Docker kullanımı ve optimizasyonu
+- [Proje Durumu](PROJECT_STATE.md) - Mevcut proje durumu
 
 ## 🤝 Katkıda Bulunma
 
-1. Fork yapın
-2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
-3. Değişikliklerinizi commit edin (`git commit -m 'Add amazing feature'`)
-4. Branch'inizi push edin (`git push origin feature/amazing-feature`)
-5. Pull Request oluşturun
+1. Repository'yi fork edin
+2. Özellik dalı oluşturun (`git checkout -b feature/amazing-feature`)
+3. Değişikliklerinizi yapın
+4. Uygunsa test ekleyin
+5. Pull request gönderin
 
 ## 📄 Lisans
 
-Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için `LICENSE` dosyasına bakın.
+Bu proje MIT Lisansı altında lisanslanmıştır - detaylar için [LICENSE](LICENSE) dosyasına bakın.
 
 ## 🆘 Destek
 
 Sorunlarınız için:
-1. GitHub Issues sayfasını kullanın
-2. Detaylı hata mesajları ve log'lar ekleyin
-3. Kullandığınız işletim sistemi ve versiyonları belirtin
+1. [Dokümantasyonu](how_to_use_tr.md) kontrol edin
+2. Mevcut [GitHub Issues](https://github.com/naimalpermuhacir/BugZora/issues) arayın
+3. Detaylı bilgilerle yeni issue oluşturun
 
 ## 🔄 Güncellemeler
 
-- **v1.0.0**: İlk sürüm - temel tarama özellikleri
-- **v1.1.0**: Çoklu referans sistemi eklendi
-- **v1.2.0**: JSON ve PDF format desteği eklendi
-- **v1.3.0**: Gelişmiş raporlama ve metadata eklendi
+- **v1.3.0**: Tam Trivy CLI desteği, SBOM üretimi, policy enforcement
+- **v1.2.0**: Docker optimizasyonları, güvenlik sertleştirme, çoklu mimari desteği
+- **v1.1.0**: Gelişmiş raporlama, çoklu referans sistemleri
+- **v1.0.0**: Temel tarama özellikleri ile ilk sürüm
 
----
+## 🙏 Teşekkürler
 
-**BugZora** - Güvenlik Tarama Uygulaması  
-Copyright © 2025 BugZora <bugzora@bugzora.dev>  
-MIT License 
+- [Trivy](https://github.com/aquasecurity/trivy) - Altyapı tarama motoru
+- [Cobra](https://github.com/spf13/cobra) - CLI framework
+- [Aqua Security](https://www.aquasec.com/) - Zafiyet veritabanı 

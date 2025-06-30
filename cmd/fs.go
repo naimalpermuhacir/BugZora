@@ -7,9 +7,11 @@ package cmd
 import (
 	"context"
 	"log"
+	"os"
 
 	"github.com/spf13/cobra"
 
+	"bugzora/pkg/policy"
 	"bugzora/pkg/report"
 	"bugzora/pkg/vuln"
 )
@@ -22,22 +24,77 @@ var fsCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fsPath := args[0]
-		output, _ := cmd.Flags().GetString("output")
-		quiet, _ := cmd.Flags().GetBool("quiet")
 
-		scanReport, err := vuln.ScanFilesystem(context.Background(), fsPath, quiet)
+		// Build Trivy command with all the flags
+		trivyArgs := buildTrivyArgs("fs", fsPath)
+
+		scanReport, err := vuln.ScanFilesystemWithArgs(context.Background(), fsPath, trivyArgs, quiet)
 		if err != nil {
 			log.Fatalf("Filesystem scan error: %v", err)
 		}
 
-		if err := report.WriteResults(scanReport.Results, output, fsPath); err != nil {
+		// Policy enforcement
+		if policyFile != "" {
+			pol, err := policy.LoadPolicy(policyFile)
+			if err != nil {
+				log.Fatalf("Failed to load policy file: %v", err)
+			}
+			var vulns []policy.Vulnerability
+			for _, result := range scanReport.Results {
+				for _, v := range result.Vulnerabilities {
+					vulns = append(vulns, policy.Vulnerability{
+						VulnerabilityID: v.VulnerabilityID,
+						Severity:        v.Severity,
+						PackageName:     v.PkgName,
+						PackageVersion:  v.InstalledVersion,
+						Title:           v.Title,
+						Description:     v.Description,
+						Metadata:        map[string]string{"target": result.Target, "type": string(result.Type)},
+					})
+				}
+			}
+			res := policy.EvaluatePolicy(pol, vulns)
+			if !res.Passed {
+				log.Printf("\n\033[31mPolicy Violations Detected!\033[0m")
+				for _, v := range res.Violations {
+					log.Printf("- %s", v)
+				}
+				os.Exit(3)
+			}
+			if len(res.Warnings) > 0 {
+				log.Printf("\n\033[33mPolicy Warnings:\033[0m")
+				for _, w := range res.Warnings {
+					log.Printf("- %s", w)
+				}
+			}
+		}
+
+		if !quiet {
+			report.PrintTable(fsPath, scanReport.Results)
+		}
+
+		if outputFormat != "table" {
+			if err := report.WriteReport(fsPath, scanReport.Results, outputFormat); err != nil {
 			log.Fatalf("Failed to write report: %v", err)
+			}
+		}
+
+		if len(scanReport.Results) > 0 {
+			totalVulns := 0
+			for _, result := range scanReport.Results {
+				totalVulns += len(result.Vulnerabilities)
+			}
+			if totalVulns > 0 {
+				log.Printf("\nFound %d vulnerabilities in %s", totalVulns, fsPath)
+				if exitCode != 0 {
+					os.Exit(exitCode)
+				}
+			}
 		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(fsCmd)
-	fsCmd.Flags().StringP("output", "o", "table", "Output format (table, json, pdf)")
-	fsCmd.Flags().BoolP("quiet", "q", false, "suppress progress messages")
+	// Remove local flags since they're now global
 }
