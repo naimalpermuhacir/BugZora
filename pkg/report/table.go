@@ -118,11 +118,11 @@ func getMultipleReferences(v types.DetectedVulnerability, target, osType string)
 
 	// Always include AquaSec if available
 	if v.PrimaryURL != "" {
-		refs = append(refs, fmt.Sprintf("🔍 AquaSec: %s", v.PrimaryURL))
+		refs = append(refs, fmt.Sprintf("🔍 Primary: %s", v.PrimaryURL))
 	}
 
 	// Add OS-specific references
-	osRefs := getOSSpecificReferences(v, target, osType)
+	osRefs := getOSReferences(v, target, osType)
 	refs = append(refs, osRefs...)
 
 	// Add CVE database references
@@ -142,8 +142,8 @@ func getMultipleReferences(v types.DetectedVulnerability, target, osType string)
 	return strings.Join(refs, "\n")
 }
 
-// getOSSpecificReferences returns OS-specific reference links
-func getOSSpecificReferences(v types.DetectedVulnerability, target, osType string) []string {
+// getOSReferences returns OS-specific reference links
+func getOSReferences(v types.DetectedVulnerability, target, osType string) []string {
 	var refs []string
 	cveID := v.VulnerabilityID
 
@@ -247,7 +247,9 @@ func severityToPriority(severity string) int {
 		return 3
 	case "LOW":
 		return 2
-	default:
+	case "UNKNOWN":
 		return 1
+	default:
+		return 0
 	}
 }

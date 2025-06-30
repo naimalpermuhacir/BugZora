@@ -69,8 +69,27 @@ var imageCmd = &cobra.Command{
 			}
 		}
 
-		if err := report.WriteResults(scanReport.Results, outputFormat, imageName); err != nil {
-			log.Fatalf("Failed to write report: %v", err)
+		if !quiet {
+			report.PrintTable(imageName, scanReport.Results)
+		}
+
+		if outputFormat != "table" {
+			if err := report.WriteReport(imageName, scanReport.Results, outputFormat); err != nil {
+				log.Fatalf("Failed to write report: %v", err)
+			}
+		}
+
+		if len(scanReport.Results) > 0 {
+			totalVulns := 0
+			for _, result := range scanReport.Results {
+				totalVulns += len(result.Vulnerabilities)
+			}
+			if totalVulns > 0 {
+				log.Printf("\nFound %d vulnerabilities in %s", totalVulns, imageName)
+				if exitCode != 0 {
+					os.Exit(exitCode)
+				}
+			}
 		}
 	},
 }

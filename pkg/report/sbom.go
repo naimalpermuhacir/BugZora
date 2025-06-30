@@ -10,7 +10,7 @@ import (
 	"github.com/aquasecurity/trivy/pkg/types"
 )
 
-// CycloneDX SBOM structures
+// CycloneDXBOM represents a CycloneDX Software Bill of Materials document
 type CycloneDXBOM struct {
 	BOMFormat       string                   `json:"bomFormat"`
 	SpecVersion     string                   `json:"specVersion"`
@@ -21,18 +21,21 @@ type CycloneDXBOM struct {
 	Vulnerabilities []CycloneDXVulnerability `json:"vulnerabilities,omitempty"`
 }
 
+// CycloneDXMetadata contains metadata about the BOM document
 type CycloneDXMetadata struct {
 	Timestamp string             `json:"timestamp"`
 	Tools     []CycloneDXTool    `json:"tools"`
 	Component CycloneDXComponent `json:"component"`
 }
 
+// CycloneDXTool represents a tool used to generate the BOM
 type CycloneDXTool struct {
 	Vendor  string `json:"vendor"`
 	Name    string `json:"name"`
 	Version string `json:"version"`
 }
 
+// CycloneDXComponent represents a software component in the BOM
 type CycloneDXComponent struct {
 	Type            string                   `json:"type"`
 	BOMRef          string                   `json:"bom-ref"`
@@ -44,10 +47,12 @@ type CycloneDXComponent struct {
 	Vulnerabilities []CycloneDXVulnerability `json:"vulnerabilities,omitempty"`
 }
 
+// CycloneDXLicense represents a license for a component
 type CycloneDXLicense struct {
 	ID string `json:"id,omitempty"`
 }
 
+// CycloneDXVulnerability represents a vulnerability in a component
 type CycloneDXVulnerability struct {
 	ID          string               `json:"id"`
 	Description string               `json:"description"`
@@ -55,18 +60,20 @@ type CycloneDXVulnerability struct {
 	References  []CycloneDXReference `json:"references,omitempty"`
 }
 
+// CycloneDXRating represents a severity rating for a vulnerability
 type CycloneDXRating struct {
 	Severity string `json:"severity"`
 	Method   string `json:"method"`
 	Vector   string `json:"vector"`
 }
 
+// CycloneDXReference represents a reference link for a vulnerability
 type CycloneDXReference struct {
 	URL  string `json:"url"`
 	Type string `json:"type"`
 }
 
-// SPDX SBOM structures
+// SPDXDocument represents an SPDX Software Bill of Materials document
 type SPDXDocument struct {
 	SPDXVersion       string            `json:"spdxVersion"`
 	DataLicense       string            `json:"dataLicense"`
@@ -79,6 +86,7 @@ type SPDXDocument struct {
 	ExternalRefs      []SPDXExternalRef `json:"externalRefs,omitempty"`
 }
 
+// SPDXPackage represents a package in the SPDX document
 type SPDXPackage struct {
 	SPDXID                  string            `json:"spdxID"`
 	Name                    string            `json:"name"`
@@ -91,6 +99,7 @@ type SPDXPackage struct {
 	ExternalRefs            []SPDXExternalRef `json:"externalRefs,omitempty"`
 }
 
+// SPDXExternalRef represents an external reference for a package
 type SPDXExternalRef struct {
 	ReferenceCategory string `json:"referenceCategory"`
 	ReferenceType     string `json:"referenceType"`

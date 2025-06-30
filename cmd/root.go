@@ -66,27 +66,22 @@ var (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "bugzora",
-	Short: "A powerful vulnerability scanner for container images and filesystems",
-	Long: `Bugzora is a comprehensive security scanning tool that leverages the 
-industry-standard Trivy engine to provide detailed vulnerability analysis.
+	Short: "BugZora - Container and filesystem security scanner",
+	Long: `BugZora is a comprehensive security scanner for container images and filesystems.
+It uses Trivy as its scanning engine and provides enhanced reporting capabilities.
 
 Features:
-• Container image scanning from Docker Hub and other registries
-• Filesystem vulnerability scanning
-• Multiple output formats (table, JSON, PDF, SARIF, CycloneDX, SPDX)
-• OS-specific vulnerability references
-• Colored terminal output with detailed tables
-• Policy enforcement with OPA/Rego
-• Secret and license scanning
-• Kubernetes and repository scanning
+- Container image vulnerability scanning
+- Filesystem security analysis
+- Multiple output formats (table, JSON, PDF, SBOM)
+- Policy enforcement
+- Comprehensive vulnerability references
+- Docker integration
 
 Examples:
-  bugzora image ubuntu:20.04
+  bugzora image alpine:latest
   bugzora fs /path/to/filesystem
-  bugzora image alpine:latest --output json
-  bugzora fs ./my-app --output pdf
-  bugzora image nginx:latest --severity HIGH,CRITICAL
-  bugzora fs /path --security-checks vuln,secret,config`,
+  bugzora image nginx:latest --format json --output report.json`,
 	Version: fmt.Sprintf("%s (commit: %s, date: %s)", version, commit, date),
 }
 
@@ -135,11 +130,14 @@ func init() {
 	rootCmd.PersistentFlags().StringSliceVar(&ignoreIDs, "ignore-ids", []string{}, "Vulnerability IDs to ignore")
 	rootCmd.PersistentFlags().StringVar(&ignoreFile, "ignore-file", "", "Specify .trivyignore file")
 	rootCmd.PersistentFlags().BoolVar(&includeDevDeps, "include-dev-deps", false, "Include development dependencies in scanning")
-	rootCmd.PersistentFlags().BoolVar(&skipJavaDB, "skip-java-db", false, "Skip Java DB update")
+	rootCmd.PersistentFlags().BoolVar(&skipJavaDB, "skip-java-db", false, "Skip updating Java index database")
 	rootCmd.PersistentFlags().BoolVar(&skipUnfixed, "skip-unfixed", false, "Skip unfixed vulnerabilities")
-	rootCmd.PersistentFlags().StringVar(&onlyUpdate, "only-update", "", "Update only specified scanner data (e.g. vuln,secret)")
-	rootCmd.PersistentFlags().BoolVar(&refresh, "refresh", false, "Refresh DB (usually used after version update of scanner)")
-	rootCmd.PersistentFlags().BoolVar(&autoRefresh, "auto-refresh", false, "Auto refresh before scanning")
-	rootCmd.PersistentFlags().BoolVar(&light, "light", false, "Light mode (suitable for CI)")
-	rootCmd.PersistentFlags().StringVar(&policyFile, "policy-file", "", "Policy file (YAML/JSON) for policy enforcement")
+	rootCmd.PersistentFlags().StringVar(&onlyUpdate, "only-update", "", "Update only specified database (e.g. alpine, debian, ubuntu)")
+	rootCmd.PersistentFlags().BoolVar(&refresh, "refresh", false, "Refresh OVAL database")
+	rootCmd.PersistentFlags().BoolVar(&autoRefresh, "auto-refresh", false, "Auto refresh before scan")
+	rootCmd.PersistentFlags().BoolVar(&light, "light", false, "Light mode (disable security checks)")
+	rootCmd.PersistentFlags().StringVar(&policyFile, "policy-file", "", "Path to policy file for enforcement")
+
+	rootCmd.AddCommand(imageCmd)
+	rootCmd.AddCommand(fsCmd)
 }

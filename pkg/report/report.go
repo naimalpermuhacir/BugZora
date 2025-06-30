@@ -195,20 +195,20 @@ func WritePDF(fileNameBase string, results types.Results) error {
 	pdf.SetFont("Arial", "B", 16)
 
 	// Add title
-	pdf.Cell(190, 10, "Güvenlik Tarama Raporu")
+	pdf.Cell(190, 10, "Security Scan Report")
 	pdf.Ln(15)
 
 	// Add scan information
 	pdf.SetFont("Arial", "B", 12)
-	pdf.Cell(190, 8, "Tarama Bilgileri")
+	pdf.Cell(190, 8, "Scan Information")
 	pdf.Ln(10)
 
 	pdf.SetFont("Arial", "", 10)
-	pdf.Cell(50, 6, "Tarama Zamanı:")
+	pdf.Cell(50, 6, "Scan Time:")
 	pdf.Cell(140, 6, time.Now().Format("2006-01-02 15:04:05"))
 	pdf.Ln(8)
 
-	pdf.Cell(50, 6, "Tarayıcı:")
+	pdf.Cell(50, 6, "Scanner:")
 	pdf.Cell(140, 6, "bugzora v1.0.0")
 	pdf.Ln(8)
 
@@ -218,31 +218,31 @@ func WritePDF(fileNameBase string, results types.Results) error {
 	// Add summary section
 	pdf.Ln(5)
 	pdf.SetFont("Arial", "B", 12)
-	pdf.Cell(190, 8, "Özet İstatistikler")
+	pdf.Cell(190, 8, "Summary Statistics")
 	pdf.Ln(10)
 
 	pdf.SetFont("Arial", "", 10)
-	pdf.Cell(50, 6, "Kritik:")
+	pdf.Cell(50, 6, "Critical:")
 	pdf.Cell(20, 6, strconv.Itoa(summary.Critical))
 	pdf.Ln(8)
 
-	pdf.Cell(50, 6, "Yüksek:")
+	pdf.Cell(50, 6, "High:")
 	pdf.Cell(20, 6, strconv.Itoa(summary.High))
 	pdf.Ln(8)
 
-	pdf.Cell(50, 6, "Orta:")
+	pdf.Cell(50, 6, "Medium:")
 	pdf.Cell(20, 6, strconv.Itoa(summary.Medium))
 	pdf.Ln(8)
 
-	pdf.Cell(50, 6, "Düşük:")
+	pdf.Cell(50, 6, "Low:")
 	pdf.Cell(20, 6, strconv.Itoa(summary.Low))
 	pdf.Ln(8)
 
-	pdf.Cell(50, 6, "Bilinmeyen:")
+	pdf.Cell(50, 6, "Unknown:")
 	pdf.Cell(20, 6, strconv.Itoa(summary.Unknown))
 	pdf.Ln(8)
 
-	pdf.Cell(50, 6, "Toplam:")
+	pdf.Cell(50, 6, "Total:")
 	pdf.Cell(20, 6, strconv.Itoa(summary.Total))
 	pdf.Ln(15)
 
@@ -254,7 +254,7 @@ func WritePDF(fileNameBase string, results types.Results) error {
 
 		// Add result section header
 		pdf.SetFont("Arial", "B", 12)
-		pdf.Cell(190, 8, fmt.Sprintf("Hedef: %s (%s)", result.Target, result.Type))
+		pdf.Cell(190, 8, fmt.Sprintf("Target: %s (%s)", result.Target, result.Type))
 		pdf.Ln(10)
 
 		// Create vulnerability table
@@ -298,35 +298,30 @@ func calculatePDFSummary(results types.Results) Summary {
 
 // createVulnerabilityTable creates a table of vulnerabilities in the PDF
 func createVulnerabilityTable(pdf *gofpdf.Fpdf, vulnerabilities []types.DetectedVulnerability) {
-	// Table header
-	pdf.SetFont("Arial", "B", 9)
-	pdf.SetFillColor(240, 240, 240)
+	widths := []float64{30, 35, 25, 25, 20, 55}
 
-	headers := []string{"CVE ID", "Paket", "Sürüm", "Düzeltme", "Seviye", "Başlık"}
-	widths := []float64{25, 30, 25, 25, 20, 45}
+	pdf.SetFont("Arial", "B", 8)
+	pdf.SetFillColor(200, 200, 200)
 
-	// Draw header
-	for i, header := range headers {
-		pdf.CellFormat(widths[i], 7, header, "1", 0, "", true, 0, "")
-	}
+	pdf.CellFormat(widths[0], 6, "Vuln ID", "1", 0, "", true, 0, "")
+	pdf.CellFormat(widths[1], 6, "Package", "1", 0, "", true, 0, "")
+	pdf.CellFormat(widths[2], 6, "Installed", "1", 0, "", true, 0, "")
+	pdf.CellFormat(widths[3], 6, "Fixed", "1", 0, "", true, 0, "")
+	pdf.CellFormat(widths[4], 6, "Severity", "1", 0, "", true, 0, "")
+	pdf.CellFormat(widths[5], 6, "Title", "1", 0, "", true, 0, "")
 	pdf.Ln(-1)
 
-	// Table content
 	pdf.SetFont("Arial", "", 8)
-	pdf.SetFillColor(255, 255, 255)
 
 	for _, vuln := range vulnerabilities {
-		// Set row color based on severity
 		fillColor := getSeverityColor(vuln.Severity)
 		pdf.SetFillColor(fillColor[0], fillColor[1], fillColor[2])
 
-		// Truncate long text
 		title := truncateText(vuln.Title, 40)
 		pkgName := truncateText(vuln.PkgName, 25)
 		installedVer := truncateText(vuln.InstalledVersion, 20)
 		fixedVer := truncateText(vuln.FixedVersion, 20)
 
-		// Draw cells
 		pdf.CellFormat(widths[0], 6, vuln.VulnerabilityID, "1", 0, "", true, 0, "")
 		pdf.CellFormat(widths[1], 6, pkgName, "1", 0, "", true, 0, "")
 		pdf.CellFormat(widths[2], 6, installedVer, "1", 0, "", true, 0, "")
@@ -335,11 +330,10 @@ func createVulnerabilityTable(pdf *gofpdf.Fpdf, vulnerabilities []types.Detected
 		pdf.CellFormat(widths[5], 6, title, "1", 0, "", true, 0, "")
 		pdf.Ln(-1)
 
-		// Add reference links if available
 		if vuln.PrimaryURL != "" {
 			pdf.SetFont("Arial", "I", 7)
 			pdf.SetTextColor(0, 0, 255)
-			refText := fmt.Sprintf("Referans: %s", truncateText(vuln.PrimaryURL, 80))
+			refText := fmt.Sprintf("Reference: %s", truncateText(vuln.PrimaryURL, 80))
 			pdf.Cell(190, 4, refText)
 			pdf.Ln(5)
 			pdf.SetTextColor(0, 0, 0)
@@ -352,15 +346,15 @@ func createVulnerabilityTable(pdf *gofpdf.Fpdf, vulnerabilities []types.Detected
 func getSeverityColor(severity string) [3]int {
 	switch severity {
 	case "CRITICAL":
-		return [3]int{255, 0, 0} // Red
+		return [3]int{255, 0, 0}
 	case "HIGH":
-		return [3]int{255, 165, 0} // Orange
+		return [3]int{255, 165, 0}
 	case "MEDIUM":
-		return [3]int{255, 255, 0} // Yellow
+		return [3]int{255, 255, 0}
 	case "LOW":
-		return [3]int{0, 255, 0} // Green
+		return [3]int{0, 255, 0}
 	default:
-		return [3]int{200, 200, 200} // Gray
+		return [3]int{200, 200, 200}
 	}
 }
 
@@ -379,7 +373,7 @@ func generateReferences(vuln types.DetectedVulnerability, target, osType string)
 	// Add AquaSec reference
 	if vuln.PrimaryURL != "" {
 		refs = append(refs, Reference{
-			Type:        "AquaSec",
+			Type:        "Primary",
 			URL:         vuln.PrimaryURL,
 			Description: "Primary vulnerability analysis and details",
 		})
@@ -411,42 +405,27 @@ func generateOSReferences(vuln types.DetectedVulnerability, target, osType strin
 	switch osName {
 	case "ubuntu":
 		refs = append(refs, Reference{
-			Type:        "Ubuntu Security",
+			Type:        "Ubuntu Advisory",
 			URL:         fmt.Sprintf("https://ubuntu.com/security/cve/%s", cveID),
-			Description: "Ubuntu security advisory",
-		})
-		refs = append(refs, Reference{
-			Type:        "Ubuntu Tracker",
-			URL:         fmt.Sprintf("https://ubuntu.com/security/%s", cveID),
-			Description: "Ubuntu security tracker",
+			Description: "Ubuntu security advisory for " + cveID,
 		})
 	case "debian":
 		refs = append(refs, Reference{
-			Type:        "Debian Security Tracker",
+			Type:        "Debian Advisory",
 			URL:         fmt.Sprintf("https://security-tracker.debian.org/tracker/%s", cveID),
-			Description: "Debian security tracker",
-		})
-		refs = append(refs, Reference{
-			Type:        "Debian Security",
-			URL:         fmt.Sprintf("https://www.debian.org/security/%s", cveID),
-			Description: "Debian security advisory",
+			Description: "Debian security tracker for " + cveID,
 		})
 	case "alpine":
 		refs = append(refs, Reference{
-			Type:        "Alpine Security",
-			URL:         fmt.Sprintf("https://security.alpinelinux.org/vuln/%s", cveID),
-			Description: "Alpine security advisory",
+			Type:        "Alpine Advisory",
+			URL:         fmt.Sprintf("https://alpinelinux.org/security/cve/%s", cveID),
+			Description: "Alpine security advisory for " + cveID,
 		})
 	case "redhat":
 		refs = append(refs, Reference{
-			Type:        "Red Hat Security",
+			Type:        "Red Hat Advisory",
 			URL:         fmt.Sprintf("https://access.redhat.com/security/cve/%s", cveID),
-			Description: "Red Hat security advisory",
-		})
-		refs = append(refs, Reference{
-			Type:        "Red Hat Bugzilla",
-			URL:         fmt.Sprintf("https://bugzilla.redhat.com/show_bug.cgi?id=%s", cveID),
-			Description: "Red Hat bugzilla entry",
+			Description: "Red Hat security advisory for " + cveID,
 		})
 	}
 
@@ -458,21 +437,16 @@ func generateCVEReferences(vuln types.DetectedVulnerability) []Reference {
 	var refs []Reference
 	cveID := vuln.VulnerabilityID
 
-	if cveID != "" {
+	if strings.HasPrefix(cveID, "CVE-") {
 		refs = append(refs, Reference{
 			Type:        "CVE Details",
 			URL:         fmt.Sprintf("https://www.cvedetails.com/cve/%s/", cveID),
-			Description: "Comprehensive CVE information",
+			Description: "Detailed CVE information and analysis",
 		})
 		refs = append(refs, Reference{
 			Type:        "MITRE",
 			URL:         fmt.Sprintf("https://cve.mitre.org/cgi-bin/cvename.cgi?name=%s", cveID),
-			Description: "Official CVE database",
-		})
-		refs = append(refs, Reference{
-			Type:        "NVD",
-			URL:         fmt.Sprintf("https://nvd.nist.gov/vuln/detail/%s", cveID),
-			Description: "National Vulnerability Database",
+			Description: "MITRE CVE database entry",
 		})
 	}
 
