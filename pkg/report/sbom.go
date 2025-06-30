@@ -288,3 +288,4 @@ func generateVerificationCode(pkgName, version string) string {
 	// Simple hash-like verification code
 	return fmt.Sprintf("%x", len(pkgName+version))
 }
+ 

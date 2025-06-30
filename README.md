@@ -63,7 +63,7 @@ bugzora image alpine:latest --policy-file policy.yaml
 
 ### Multiple Output Formats
 
-```bash
+   ```bash
 # JSON report
 bugzora image nginx:latest --format json --output report.json
 
@@ -149,12 +149,12 @@ Report Summary
       "target": "alpine:3.18",
       "type": "alpine",
       "vulnerabilities": [...],
-      "summary": {
-        "critical": 0,
+  "summary": {
+    "critical": 0,
         "high": 2,
         "medium": 3,
-        "low": 0,
-        "unknown": 0,
+    "low": 0,
+    "unknown": 0,
         "total": 5
       }
     }

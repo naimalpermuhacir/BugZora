@@ -75,7 +75,7 @@ var fsCmd = &cobra.Command{
 
 		if outputFormat != "table" {
 			if err := report.WriteReport(fsPath, scanReport.Results, outputFormat); err != nil {
-				log.Fatalf("Failed to write report: %v", err)
+			log.Fatalf("Failed to write report: %v", err)
 			}
 		}
 

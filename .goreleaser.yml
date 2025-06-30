@@ -55,4 +55,4 @@ nfpms:
     formats:
       - deb
       - rpm
-    bindir: /usr/bin 
+    bindir: /usr/bin

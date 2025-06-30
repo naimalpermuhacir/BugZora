@@ -78,7 +78,7 @@ bugzora image alpine:latest --format spdx
 
 ### Gelişmiş Tarama Seçenekleri
 
-```bash
+   ```bash
 # Belirli severity'ler ile tara
 bugzora image nginx:latest --severity HIGH,CRITICAL
 
@@ -148,12 +148,12 @@ Report Summary
       "target": "alpine:3.18",
       "type": "alpine",
       "vulnerabilities": [...],
-      "summary": {
-        "critical": 0,
+  "summary": {
+    "critical": 0,
         "high": 2,
         "medium": 3,
-        "low": 0,
-        "unknown": 0,
+    "low": 0,
+    "unknown": 0,
         "total": 5
       }
     }

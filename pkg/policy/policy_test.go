@@ -213,3 +213,4 @@ func TestCountVulnerabilitiesBySeverity(t *testing.T) {
 		})
 	}
 }
+ 

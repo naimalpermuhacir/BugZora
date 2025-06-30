@@ -37,3 +37,4 @@ var licenseCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(licenseCmd)
 }
+ 

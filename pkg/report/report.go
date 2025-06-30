@@ -12,15 +12,15 @@ import (
 	"github.com/jung-kurt/gofpdf"
 )
 
-// WriteResults takes the scan results and outputs them in the specified format.
-func WriteResults(results types.Results, format string, outputTarget string) error {
-	sanitizedTarget := strings.ReplaceAll(outputTarget, "/", "_")
+// WriteReport takes the scan results and outputs them in the specified format.
+func WriteReport(target string, results types.Results, format string) error {
+	sanitizedTarget := strings.ReplaceAll(target, "/", "_")
 	sanitizedTarget = strings.ReplaceAll(sanitizedTarget, ":", "-")
 	outputFileNameBase := "report-" + sanitizedTarget
 
 	switch format {
 	case "table":
-		PrintTable(outputTarget, results)
+		PrintTable(target, results)
 		return nil
 	case "json":
 		return WriteJSON(outputFileNameBase, results)
@@ -33,6 +33,11 @@ func WriteResults(results types.Results, format string, outputTarget string) err
 	default:
 		return fmt.Errorf("unsupported output format: %s", format)
 	}
+}
+
+// WriteResults takes the scan results and outputs them in the specified format.
+func WriteResults(results types.Results, format string, outputTarget string) error {
+	return WriteReport(outputTarget, results, format)
 }
 
 // VulnerabilityReport represents the complete scan report structure for JSON
