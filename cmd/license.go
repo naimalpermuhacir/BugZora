@@ -20,10 +20,7 @@ var licenseCmd = &cobra.Command{
 
 		log.Printf("Scanning for licenses in: %s...", target)
 
-		// Build Trivy command with license scanning
 		trivyArgs := buildTrivyArgs("fs", target)
-
-		// Override scanners to only scan for licenses
 		trivyArgs = append(trivyArgs, "--scanners", "license")
 
 		scanReport, err := vuln.ScanFilesystemWithArgs(context.Background(), target, trivyArgs, quiet)

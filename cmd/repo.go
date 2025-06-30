@@ -20,7 +20,6 @@ var repoCmd = &cobra.Command{
 
 		log.Printf("Scanning repository: %s...", repoURL)
 
-		// Build Trivy command with repository scanning
 		trivyArgs := buildTrivyArgs("repo", repoURL)
 
 		scanReport, err := vuln.ScanRepositoryWithArgs(context.Background(), repoURL, trivyArgs, quiet)

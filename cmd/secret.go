@@ -20,10 +20,7 @@ var secretCmd = &cobra.Command{
 
 		log.Printf("Scanning for secrets in: %s...", target)
 
-		// Build Trivy command with secret scanning
 		trivyArgs := buildTrivyArgs("fs", target)
-
-		// Override scanners to only scan for secrets
 		trivyArgs = append(trivyArgs, "--scanners", "secret")
 
 		scanReport, err := vuln.ScanFilesystemWithArgs(context.Background(), target, trivyArgs, quiet)

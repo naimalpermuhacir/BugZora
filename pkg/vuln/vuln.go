@@ -67,21 +67,8 @@ func runTrivyCommand(ctx context.Context, args ...string) (types.Report, error) 
 func runTrivyCommandWithArgs(ctx context.Context, args []string, quiet bool) (types.Report, error) {
 	var report types.Report
 
-	// Base command arguments - only add cache-dir and format if not already specified
-	baseArgs := []string{"--cache-dir", "/tmp/.trivy-cache"}
-
-	// Check if format is already specified
-	hasFormat := false
-	for i, arg := range args {
-		if arg == "--format" && i+1 < len(args) {
-			hasFormat = true
-			break
-		}
-	}
-
-	if !hasFormat {
-		baseArgs = append(baseArgs, "--format", "json")
-	}
+	// Base command arguments - always use JSON format for Trivy
+	baseArgs := []string{"--cache-dir", "/tmp/.trivy-cache", "--format", "json"}
 
 	// Only add quiet if not already specified and quiet is true
 	if quiet {

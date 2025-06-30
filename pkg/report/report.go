@@ -26,6 +26,10 @@ func WriteResults(results types.Results, format string, outputTarget string) err
 		return WriteJSON(outputFileNameBase, results)
 	case "pdf":
 		return WritePDF(outputFileNameBase, results)
+	case "cyclonedx":
+		return WriteCycloneDX(outputFileNameBase, results)
+	case "spdx":
+		return WriteSPDX(outputFileNameBase, results)
 	default:
 		return fmt.Errorf("unsupported output format: %s", format)
 	}
@@ -89,7 +93,7 @@ type Reference struct {
 
 // WriteJSON generates a comprehensive JSON report
 func WriteJSON(fileNameBase string, results types.Results) error {
-	fileName := fmt.Sprintf("%s.json", fileNameBase)
+	fileName := fmt.Sprintf("%s-json.json", fileNameBase)
 
 	// Create the report structure
 	report := VulnerabilityReport{
@@ -181,7 +185,7 @@ func WriteJSON(fileNameBase string, results types.Results) error {
 
 // WritePDF generates a comprehensive PDF report
 func WritePDF(fileNameBase string, results types.Results) error {
-	fileName := fmt.Sprintf("%s.pdf", fileNameBase)
+	fileName := fmt.Sprintf("%s-pdf.pdf", fileNameBase)
 
 	// Create PDF document
 	pdf := gofpdf.New("P", "mm", "A4", "")
