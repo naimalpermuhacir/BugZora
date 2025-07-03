@@ -18,7 +18,7 @@ import (
 var repoCmd = &cobra.Command{
 	Use:   "repo [repository-url]",
 	Short: "Scan a Git repository for vulnerabilities (DEMO MODE)",
-	Long:  `🚨 DEMO MODU: Scans a given Git repository for vulnerabilities and security issues.`,
+	Long:  `🚨 DEMO MODE: Scans a given Git repository for vulnerabilities and security issues.`,
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		repoURL := args[0]
@@ -34,23 +34,23 @@ func init() {
 }
 
 func showDemoRepoWarning(repoURL string) {
-	fmt.Println("🚨 DEMO MODU")
+	fmt.Println("🚨 DEMO MODE")
 	fmt.Printf("Repository tarama simülasyonu: %s\n", repoURL)
-	fmt.Println("📧 İletişim: license@bugzora.com")
+	fmt.Println("📧 Contact: license@bugzora.com")
 	fmt.Println(strings.Repeat("─", 50))
 }
 
 func simulateRepoScan(repoURL string) {
-	fmt.Printf("🔍 Simüle ediliyor: %s repository taraması...\n", repoURL)
+	fmt.Printf("🔍 Simulating: %s repository taraması...\n", repoURL)
 	for i := 0; i < 5; i++ {
-		fmt.Printf("⏳ Tarama ilerlemesi: %d%%\n", (i+1)*20)
+		fmt.Printf("⏳ Scan progress: %d%%\n", (i+1)*20)
 		time.Sleep(500 * time.Millisecond)
 	}
-	fmt.Println("✅ Simülasyon tamamlandı!")
+	fmt.Println("✅ Simulation completed!")
 }
 
 func performDemoRepoScan(repoURL string) {
-	fmt.Printf("\n📊 DEMO SONUÇLARI: %s\n", repoURL)
+	fmt.Printf("\n📊 DEMO RESULTS: %s\n", repoURL)
 	fmt.Println(strings.Repeat("─", 50))
 	trivyArgs := buildTrivyArgs("repo", repoURL)
 	trivyArgs = append(trivyArgs, "--format", "json")
@@ -74,51 +74,51 @@ func performDemoRepoScan(repoURL string) {
 		count := severityCounts[severity]
 		if count > 0 {
 			fmt.Printf("%-15s %-15s %-15s %-15s %s\n",
-				"Lisans Gerekli",
-				"Lisans Gerekli",
+				"License Required",
+				"License Required",
 				"Lisans",
 				fmt.Sprintf("%s - %d", severity, count),
-				"Lisans gerekli")
+				"License required")
 		} else {
 			fmt.Printf("%-15s %-15s %-15s %-15s %s\n",
-				"Lisans Gerekli",
-				"Lisans Gerekli",
+				"License Required",
+				"License Required",
 				"Lisans",
 				fmt.Sprintf("%s - %d", severity, count),
-				"Lisans gerekli")
+				"License required")
 		}
 	}
-	fmt.Println("\n📄 NOT: Bu demo sonuçlarıdır ancak gerçek sonuçları yansıtmaktadır.")
-	fmt.Println("🔗 Tam özellikler için: https://bugzora.com/license")
+	fmt.Println("\n📄 NOT: This is a demo result but reflects real data.")
+	fmt.Println("🔗 For full features: https://bugzora.com/license")
 }
 
 func showDemoRepoResults(repoURL string) {
 	fmt.Printf("%-15s %-15s %-15s %-15s %s\n", "İSSUE TİPİ", "DOSYA YOLU", "SATIR", "SEVERITY", "AÇIKLAMA")
 	fmt.Println(strings.Repeat("─", 80))
 	fmt.Printf("%-15s %-15s %-15s %-15s %s\n",
-		"Lisans Gerekli",
-		"Lisans Gerekli",
+		"License Required",
+		"License Required",
 		"Lisans",
 		"CRITICAL - 0",
-		"Lisans gerekli")
+		"License required")
 	fmt.Printf("%-15s %-15s %-15s %-15s %s\n",
-		"Lisans Gerekli",
-		"Lisans Gerekli",
+		"License Required",
+		"License Required",
 		"Lisans",
 		"HIGH - 0",
-		"Lisans gerekli")
+		"License required")
 	fmt.Printf("%-15s %-15s %-15s %-15s %s\n",
-		"Lisans Gerekli",
-		"Lisans Gerekli",
+		"License Required",
+		"License Required",
 		"Lisans",
 		"MEDIUM - 0",
-		"Lisans gerekli")
+		"License required")
 	fmt.Printf("%-15s %-15s %-15s %-15s %s\n",
-		"Lisans Gerekli",
-		"Lisans Gerekli",
+		"License Required",
+		"License Required",
 		"Lisans",
 		"LOW - 0",
-		"Lisans gerekli")
-	fmt.Println("\n📄 NOT: Bu demo sonuçlarıdır ancak gerçek sonuçları yansıtmaktadır.")
-	fmt.Println("🔗 Tam özellikler için: https://bugzora.com/license")
+		"License required")
+	fmt.Println("\n📄 NOT: This is a demo result but reflects real data.")
+	fmt.Println("🔗 For full features: https://bugzora.com/license")
 }

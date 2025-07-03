@@ -18,7 +18,7 @@ import (
 var fsCmd = &cobra.Command{
 	Use:   "fs [path]",
 	Short: "Scan a filesystem for vulnerabilities (DEMO MODE)",
-	Long:  `🚨 DEMO MODU: Scans a given filesystem path for OS packages and their vulnerabilities.`,
+	Long:  `🚨 DEMO MODE: Scans a given filesystem path for OS packages and their vulnerabilities.`,
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		path := args[0]
@@ -34,23 +34,23 @@ func init() {
 }
 
 func showDemoFsWarning(path string) {
-	fmt.Println("🚨 DEMO MODU")
-	fmt.Printf("Filesystem tarama simülasyonu: %s\n", path)
-	fmt.Println("📧 İletişim: license@bugzora.com")
+	fmt.Println("🚨 DEMO MODE")
+	fmt.Printf("Filesystem scanning simulation: %s\n", path)
+	fmt.Println("📧 Contact: license@bugzora.com")
 	fmt.Println(strings.Repeat("─", 50))
 }
 
 func simulateFsScan(path string) {
-	fmt.Printf("🔍 Simüle ediliyor: %s taraması...\n", path)
+	fmt.Printf("🔍 Simulating: %s scanning...\n", path)
 	for i := 0; i < 5; i++ {
-		fmt.Printf("⏳ Tarama ilerlemesi: %d%%\n", (i+1)*20)
+		fmt.Printf("⏳ Scan progress: %d%%\n", (i+1)*20)
 		time.Sleep(500 * time.Millisecond)
 	}
-	fmt.Println("✅ Simülasyon tamamlandı!")
+	fmt.Println("✅ Simulation completed!")
 }
 
 func performDemoFsScan(path string) {
-	fmt.Printf("\n📊 DEMO SONUÇLARI: %s\n", path)
+	fmt.Printf("\n📊 DEMO RESULTS: %s\n", path)
 	fmt.Println(strings.Repeat("─", 50))
 	trivyArgs := buildTrivyArgs("fs", path)
 	trivyArgs = append(trivyArgs, "--format", "json")
@@ -67,58 +67,58 @@ func performDemoFsScan(path string) {
 			totalVulns++
 		}
 	}
-	fmt.Printf("%-15s %-15s %-20s %-20s %s\n", "PAKET", "ZAFİYET", "SEVERITY", "DOSYA YOLU", "AÇIKLAMA")
+	fmt.Printf("%-15s %-15s %-20s %-20s %s\n", "PACKAGE", "VULNERABILITY", "SEVERITY", "FILE PATH", "DESCRIPTION")
 	fmt.Println(strings.Repeat("─", 100))
 	severities := []string{"CRITICAL", "HIGH", "MEDIUM", "LOW"}
 	for _, severity := range severities {
 		count := severityCounts[severity]
 		if count > 0 {
 			fmt.Printf("%-15s %-15s %-20s %-20s %s\n",
-				"Lisans Gerekli",
-				"Lisans Gerekli",
+				"License Required",
+				"License Required",
 				fmt.Sprintf("%s - %d", severity, count),
-				"Lisans Gerekli",
-				"Lisans gerekli")
+				"License Required",
+				"License required")
 		} else {
 			fmt.Printf("%-15s %-15s %-20s %-20s %s\n",
-				"Lisans Gerekli",
-				"Lisans Gerekli",
+				"License Required",
+				"License Required",
 				fmt.Sprintf("%s - %d", severity, count),
-				"Lisans Gerekli",
-				"Lisans gerekli")
+				"License Required",
+				"License required")
 		}
 	}
-	fmt.Println("\n📄 NOT: Bu demo sonuçlarıdır ancak gerçek sonuçları yansıtmaktadır.")
-	fmt.Println("🔗 Tam özellikler için: https://bugzora.com/license")
+	fmt.Println("\n📄 NOT: This is a demo result but reflects real data.")
+	fmt.Println("🔗 For full features: https://bugzora.com/license")
 }
 
 func showDemoFsResults(path string) {
-	fmt.Printf("%-15s %-15s %-20s %-20s %s\n", "PAKET", "ZAFİYET", "SEVERITY", "DOSYA YOLU", "AÇIKLAMA")
+	fmt.Printf("%-15s %-15s %-20s %-20s %s\n", "PACKAGE", "VULNERABILITY", "SEVERITY", "FILE PATH", "DESCRIPTION")
 	fmt.Println(strings.Repeat("─", 100))
 	fmt.Printf("%-15s %-15s %-20s %-20s %s\n",
-		"Lisans Gerekli",
-		"Lisans Gerekli",
+		"License Required",
+		"License Required",
 		"CRITICAL - 0",
-		"Lisans Gerekli",
-		"Lisans gerekli")
+		"License Required",
+		"License required")
 	fmt.Printf("%-15s %-15s %-20s %-20s %s\n",
-		"Lisans Gerekli",
-		"Lisans Gerekli",
+		"License Required",
+		"License Required",
 		"HIGH - 0",
-		"Lisans Gerekli",
-		"Lisans gerekli")
+		"License Required",
+		"License required")
 	fmt.Printf("%-15s %-15s %-20s %-20s %s\n",
-		"Lisans Gerekli",
-		"Lisans Gerekli",
+		"License Required",
+		"License Required",
 		"MEDIUM - 0",
-		"Lisans Gerekli",
-		"Lisans gerekli")
+		"License Required",
+		"License required")
 	fmt.Printf("%-15s %-15s %-20s %-20s %s\n",
-		"Lisans Gerekli",
-		"Lisans Gerekli",
+		"License Required",
+		"License Required",
 		"LOW - 0",
-		"Lisans Gerekli",
-		"Lisans gerekli")
-	fmt.Println("\n📄 NOT: Bu demo sonuçlarıdır ancak gerçek sonuçları yansıtmaktadır.")
-	fmt.Println("🔗 Tam özellikler için: https://bugzora.com/license")
+		"License Required",
+		"License required")
+	fmt.Println("\n📄 NOT: This is a demo result but reflects real data.")
+	fmt.Println("🔗 For full features: https://bugzora.com/license")
 }

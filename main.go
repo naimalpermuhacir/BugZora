@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"bugzora/cmd"
+
 	"github.com/fatih/color"
 )
 
@@ -20,11 +21,11 @@ var (
 )
 
 func init() {
-	color.NoColor = false // Her durumda renkli çıktı
+	color.NoColor = false // Always enable colored output
 }
 
 func main() {
-	// Demo modu kontrolü
+	// Demo mode check
 	if os.Getenv("DEMO_MODE") == "true" || isDemoMode() {
 		showDemoWarning()
 	}
@@ -33,12 +34,12 @@ func main() {
 }
 
 func isDemoMode() bool {
-	// Demo modu kontrolü - basit kontrol
-	return true // Demo modunda her zaman demo uyarısı
+	// Demo mode check - basit kontrol
+	return true // Always show demo warning in demo mode
 }
 
 func showDemoWarning() {
-	fmt.Println("🚨 DEMO MODU")
-	fmt.Println("📧 İletişim: license@bugzora.com")
+	fmt.Println("🚨 DEMO MODE")
+	fmt.Println("📧 Contact: license@bugzora.com")
 	fmt.Println(strings.Repeat("─", 50))
 }

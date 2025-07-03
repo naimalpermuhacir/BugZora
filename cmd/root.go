@@ -67,7 +67,7 @@ var (
 var rootCmd = &cobra.Command{
 	Use:   "bugzora",
 	Short: "BugZora - Container and filesystem security scanner (DEMO MODE)",
-	Long: `🚨 DEMO MODU
+	Long: `🚨 DEMO MODE
 
 BugZora is a comprehensive security scanner for container images and filesystems.
 It uses Trivy as its scanning engine and provides enhanced reporting capabilities.
