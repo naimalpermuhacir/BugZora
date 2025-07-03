@@ -11,21 +11,26 @@ import (
 	"strings"
 	"time"
 
-	"bugzora/pkg/vuln"
-
 	"github.com/spf13/cobra"
+
+	"bugzora/pkg/vuln"
 )
 
 var imageCmd = &cobra.Command{
 	Use:   "image [image-name]",
 	Short: "Scan a container image for vulnerabilities (DEMO MODE)",
-	Long:  `🚨 DEMO MODU: Scans a given container image from a remote registry (like Docker Hub) for OS packages and their vulnerabilities.`,
+	Long:  `🚨 DEMO MODU: Scans a given container image from a remote registry (like Docker Hub) for OS packages and their vulnerabilities. Gerçek tarama yapılmaz.`,
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		imageName := args[0]
 
+		// Demo modu uyarısı
 		showDemoImageWarning(imageName)
+
+		// Demo tarama simülasyonu
 		simulateImageScan(imageName)
+
+		// Gerçek tarama yap ama sadece sayıları göster
 		performDemoImageScan(imageName)
 	},
 }
@@ -36,89 +41,94 @@ func init() {
 
 func showDemoImageWarning(imageName string) {
 	fmt.Println("🚨 DEMO MODU")
-	fmt.Printf("Image tarama simülasyonu: %s\n", imageName)
+	fmt.Printf("⚠️  Image tarama simülasyonu: %s\n", imageName)
+	fmt.Println("📄 Gerçek tarama için lisans alınması gereklidir.")
+	fmt.Println("🔗 Lisans: https://bugzora.com/license")
 	fmt.Println("📧 İletişim: license@bugzora.com")
 	fmt.Println(strings.Repeat("─", 50))
 }
 
 func simulateImageScan(imageName string) {
 	fmt.Printf("🔍 Simüle ediliyor: %s taraması...\n", imageName)
+
+	// Progress simulation
 	for i := 0; i < 5; i++ {
 		fmt.Printf("⏳ Tarama ilerlemesi: %d%%\n", (i+1)*20)
 		time.Sleep(500 * time.Millisecond)
 	}
+
 	fmt.Println("✅ Simülasyon tamamlandı!")
 }
 
 func performDemoImageScan(imageName string) {
 	fmt.Printf("\n📊 DEMO SONUÇLARI: %s\n", imageName)
 	fmt.Println(strings.Repeat("─", 50))
+
+	// Gerçek tarama yap
 	trivyArgs := buildTrivyArgs("image", imageName)
-	trivyArgs = append(trivyArgs, "--format", "json")
-	scanReport, err := vuln.ScanImageWithArgs(context.Background(), imageName, trivyArgs, false)
+	scanReport, err := vuln.ScanImageWithArgs(context.Background(), imageName, trivyArgs, quiet)
 	if err != nil {
+		// Hata durumunda demo veriler göster
 		showDemoImageResults(imageName)
 		return
 	}
+
+	// Bulgu sayılarını hesapla
 	severityCounts := make(map[string]int)
 	totalVulns := 0
+
 	for _, result := range scanReport.Results {
 		for _, v := range result.Vulnerabilities {
 			severityCounts[v.Severity]++
 			totalVulns++
 		}
 	}
-	fmt.Printf("%-15s %-15s %-20s %s\n", "PAKET", "ZAFİYET", "SEVERITY", "AÇIKLAMA")
+
+	// Demo formatında sonuçları göster
+	fmt.Printf("%-15s %-20s %-10s %s\n", "PAKET", "ZAFİYET", "SEVERITY", "AÇIKLAMA")
 	fmt.Println(strings.Repeat("─", 80))
+
 	severities := []string{"CRITICAL", "HIGH", "MEDIUM", "LOW"}
 	for _, severity := range severities {
 		count := severityCounts[severity]
 		if count > 0 {
-			fmt.Printf("%-15s %-15s %-20s %s\n",
+			fmt.Printf("%-15s %-20s %-10s %s\n",
 				"Lisans Gerekli",
 				"Lisans Gerekli",
-				fmt.Sprintf("%s - %d", severity, count),
-				"Lisans gerekli")
-		} else {
-			fmt.Printf("%-15s %-15s %-20s %s\n",
-				"Lisans Gerekli",
-				"Lisans Gerekli",
-				fmt.Sprintf("%s - %d", severity, count),
+				fmt.Sprintf("%s (%d)", severity, count),
 				"Lisans gerekli")
 		}
 	}
-	fmt.Println("\n📄 NOT: Bu demo sonuçlarıdır ancak gerçek sonuçları yansıtmaktadır.")
+
+	if totalVulns == 0 {
+		fmt.Printf("%-15s %-20s %-10s %s\n",
+			"Lisans Gerekli",
+			"Lisans Gerekli",
+			"TEMİZ",
+			"Lisans gerekli")
+	}
+
+	fmt.Println("\n📄 NOT: Bu demo sonuçlarıdır. Detaylar için lisans alınması gereklidir.")
 	fmt.Println("🔗 Tam özellikler için: https://bugzora.com/license")
 }
 
 func showDemoImageResults(imageName string) {
-	fmt.Printf("%-15s %-15s %-20s %s\n", "PAKET", "ZAFİYET", "SEVERITY", "AÇIKLAMA")
+	fmt.Printf("%-15s %-20s %-10s %s\n", "PAKET", "ZAFİYET", "SEVERITY", "AÇIKLAMA")
 	fmt.Println(strings.Repeat("─", 80))
-	fmt.Printf("%-15s %-15s %-20s %s\n",
+
+	fmt.Printf("%-15s %-20s %-10s %s\n",
 		"Lisans Gerekli",
 		"Lisans Gerekli",
-		"CRITICAL - 0",
+		"DEMO",
 		"Lisans gerekli")
-	fmt.Printf("%-15s %-15s %-20s %s\n",
-		"Lisans Gerekli",
-		"Lisans Gerekli",
-		"HIGH - 0",
-		"Lisans gerekli")
-	fmt.Printf("%-15s %-15s %-20s %s\n",
-		"Lisans Gerekli",
-		"Lisans Gerekli",
-		"MEDIUM - 0",
-		"Lisans gerekli")
-	fmt.Printf("%-15s %-15s %-20s %s\n",
-		"Lisans Gerekli",
-		"Lisans Gerekli",
-		"LOW - 0",
-		"Lisans gerekli")
-	fmt.Println("\n📄 NOT: Bu demo sonuçlarıdır ancak gerçek sonuçları yansıtmaktadır.")
+
+	fmt.Println("\n📄 NOT: Bu demo sonuçlarıdır. Gerçek tarama yapılmamıştır.")
 	fmt.Println("🔗 Tam özellikler için: https://bugzora.com/license")
 }
 
 // LayerFS is a simple fs.FS implementation that overlays tar layers.
+// NOTE: This is a simplified stand-in. The actual implementation is in go-containerregistry.
+// We ensure we call the correct function: tarball.LayerFS(img).
 type LayerFS struct {
 	fs.FS
 }

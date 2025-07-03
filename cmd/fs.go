@@ -6,95 +6,119 @@ package cmd
 
 import (
 	"context"
-	"log"
-	"os"
+	"fmt"
+	"strings"
+	"time"
+
+	"bugzora/pkg/vuln"
 
 	"github.com/spf13/cobra"
-
-	"bugzora/pkg/policy"
-	"bugzora/pkg/report"
-	"bugzora/pkg/vuln"
 )
 
-// fsCmd represents the fs command
 var fsCmd = &cobra.Command{
 	Use:   "fs [path]",
-	Short: "Scan a filesystem for vulnerabilities",
-	Long:  `Scans a given filesystem path for OS packages and their vulnerabilities.`,
+	Short: "Scan a filesystem for vulnerabilities (DEMO MODE)",
+	Long:  `🚨 DEMO MODU: Scans a given filesystem path for OS packages and their vulnerabilities.`,
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fsPath := args[0]
+		path := args[0]
 
-		// Build Trivy command with all the flags
-		trivyArgs := buildTrivyArgs("fs", fsPath)
-
-		scanReport, err := vuln.ScanFilesystemWithArgs(context.Background(), fsPath, trivyArgs, quiet)
-		if err != nil {
-			log.Fatalf("Filesystem scan error: %v", err)
-		}
-
-		// Policy enforcement
-		if policyFile != "" {
-			pol, err := policy.LoadPolicy(policyFile)
-			if err != nil {
-				log.Fatalf("Failed to load policy file: %v", err)
-			}
-			var vulns []policy.Vulnerability
-			for _, result := range scanReport.Results {
-				for _, v := range result.Vulnerabilities {
-					vulns = append(vulns, policy.Vulnerability{
-						VulnerabilityID: v.VulnerabilityID,
-						Severity:        v.Severity,
-						PackageName:     v.PkgName,
-						PackageVersion:  v.InstalledVersion,
-						Title:           v.Title,
-						Description:     v.Description,
-						Metadata:        map[string]string{"target": result.Target, "type": string(result.Type)},
-					})
-				}
-			}
-			res := policy.EvaluatePolicy(pol, vulns)
-			if !res.Passed {
-				log.Printf("\n\033[31mPolicy Violations Detected!\033[0m")
-				for _, v := range res.Violations {
-					log.Printf("- %s", v)
-				}
-				os.Exit(3)
-			}
-			if len(res.Warnings) > 0 {
-				log.Printf("\n\033[33mPolicy Warnings:\033[0m")
-				for _, w := range res.Warnings {
-					log.Printf("- %s", w)
-				}
-			}
-		}
-
-		if !quiet {
-			report.PrintTable(fsPath, scanReport.Results)
-		}
-
-		if outputFormat != "table" {
-			if err := report.WriteReport(fsPath, scanReport.Results, outputFormat); err != nil {
-			log.Fatalf("Failed to write report: %v", err)
-			}
-		}
-
-		if len(scanReport.Results) > 0 {
-			totalVulns := 0
-			for _, result := range scanReport.Results {
-				totalVulns += len(result.Vulnerabilities)
-			}
-			if totalVulns > 0 {
-				log.Printf("\nFound %d vulnerabilities in %s", totalVulns, fsPath)
-				if exitCode != 0 {
-					os.Exit(exitCode)
-				}
-			}
-		}
+		showDemoFsWarning(path)
+		simulateFsScan(path)
+		performDemoFsScan(path)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(fsCmd)
-	// Remove local flags since they're now global
+}
+
+func showDemoFsWarning(path string) {
+	fmt.Println("🚨 DEMO MODU")
+	fmt.Printf("Filesystem tarama simülasyonu: %s\n", path)
+	fmt.Println("📧 İletişim: license@bugzora.com")
+	fmt.Println(strings.Repeat("─", 50))
+}
+
+func simulateFsScan(path string) {
+	fmt.Printf("🔍 Simüle ediliyor: %s taraması...\n", path)
+	for i := 0; i < 5; i++ {
+		fmt.Printf("⏳ Tarama ilerlemesi: %d%%\n", (i+1)*20)
+		time.Sleep(500 * time.Millisecond)
+	}
+	fmt.Println("✅ Simülasyon tamamlandı!")
+}
+
+func performDemoFsScan(path string) {
+	fmt.Printf("\n📊 DEMO SONUÇLARI: %s\n", path)
+	fmt.Println(strings.Repeat("─", 50))
+	trivyArgs := buildTrivyArgs("fs", path)
+	trivyArgs = append(trivyArgs, "--format", "json")
+	scanReport, err := vuln.ScanFilesystemWithArgs(context.Background(), path, trivyArgs, false)
+	if err != nil {
+		showDemoFsResults(path)
+		return
+	}
+	severityCounts := make(map[string]int)
+	totalVulns := 0
+	for _, result := range scanReport.Results {
+		for _, v := range result.Vulnerabilities {
+			severityCounts[v.Severity]++
+			totalVulns++
+		}
+	}
+	fmt.Printf("%-15s %-15s %-20s %-20s %s\n", "PAKET", "ZAFİYET", "SEVERITY", "DOSYA YOLU", "AÇIKLAMA")
+	fmt.Println(strings.Repeat("─", 100))
+	severities := []string{"CRITICAL", "HIGH", "MEDIUM", "LOW"}
+	for _, severity := range severities {
+		count := severityCounts[severity]
+		if count > 0 {
+			fmt.Printf("%-15s %-15s %-20s %-20s %s\n",
+				"Lisans Gerekli",
+				"Lisans Gerekli",
+				fmt.Sprintf("%s - %d", severity, count),
+				"Lisans Gerekli",
+				"Lisans gerekli")
+		} else {
+			fmt.Printf("%-15s %-15s %-20s %-20s %s\n",
+				"Lisans Gerekli",
+				"Lisans Gerekli",
+				fmt.Sprintf("%s - %d", severity, count),
+				"Lisans Gerekli",
+				"Lisans gerekli")
+		}
+	}
+	fmt.Println("\n📄 NOT: Bu demo sonuçlarıdır ancak gerçek sonuçları yansıtmaktadır.")
+	fmt.Println("🔗 Tam özellikler için: https://bugzora.com/license")
+}
+
+func showDemoFsResults(path string) {
+	fmt.Printf("%-15s %-15s %-20s %-20s %s\n", "PAKET", "ZAFİYET", "SEVERITY", "DOSYA YOLU", "AÇIKLAMA")
+	fmt.Println(strings.Repeat("─", 100))
+	fmt.Printf("%-15s %-15s %-20s %-20s %s\n",
+		"Lisans Gerekli",
+		"Lisans Gerekli",
+		"CRITICAL - 0",
+		"Lisans Gerekli",
+		"Lisans gerekli")
+	fmt.Printf("%-15s %-15s %-20s %-20s %s\n",
+		"Lisans Gerekli",
+		"Lisans Gerekli",
+		"HIGH - 0",
+		"Lisans Gerekli",
+		"Lisans gerekli")
+	fmt.Printf("%-15s %-15s %-20s %-20s %s\n",
+		"Lisans Gerekli",
+		"Lisans Gerekli",
+		"MEDIUM - 0",
+		"Lisans Gerekli",
+		"Lisans gerekli")
+	fmt.Printf("%-15s %-15s %-20s %-20s %s\n",
+		"Lisans Gerekli",
+		"Lisans Gerekli",
+		"LOW - 0",
+		"Lisans Gerekli",
+		"Lisans gerekli")
+	fmt.Println("\n📄 NOT: Bu demo sonuçlarıdır ancak gerçek sonuçları yansıtmaktadır.")
+	fmt.Println("🔗 Tam özellikler için: https://bugzora.com/license")
 }

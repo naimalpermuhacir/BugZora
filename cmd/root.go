@@ -66,23 +66,25 @@ var (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "bugzora",
-	Short: "BugZora - Container and filesystem security scanner",
-	Long: `BugZora is a comprehensive security scanner for container images and filesystems.
+	Short: "BugZora - Container and filesystem security scanner (DEMO MODE)",
+	Long: `🚨 DEMO MODU
+
+BugZora is a comprehensive security scanner for container images and filesystems.
 It uses Trivy as its scanning engine and provides enhanced reporting capabilities.
 
 Features:
-- Container image vulnerability scanning
-- Filesystem security analysis
-- Multiple output formats (table, JSON, PDF, SBOM)
-- Policy enforcement
-- Comprehensive vulnerability references
-- Docker integration
+- Container image vulnerability scanning (DEMO)
+- Filesystem security analysis (DEMO)
+- Multiple output formats (table, JSON, PDF, SBOM) (DEMO)
+- Policy enforcement (DEMO)
+- Comprehensive vulnerability references (DEMO)
+- Docker integration (DEMO)
 
 Examples:
   bugzora image alpine:latest
   bugzora fs /path/to/filesystem
   bugzora image nginx:latest --format json --output report.json`,
-	Version: fmt.Sprintf("%s (commit: %s, date: %s)", version, commit, date),
+	Version: fmt.Sprintf("%s (commit: %s, date: %s) - DEMO MODE", version, commit, date),
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -140,4 +142,7 @@ func init() {
 
 	rootCmd.AddCommand(imageCmd)
 	rootCmd.AddCommand(fsCmd)
+	rootCmd.AddCommand(secretCmd)
+	rootCmd.AddCommand(licenseCmd)
+	rootCmd.AddCommand(repoCmd)
 }

@@ -138,7 +138,7 @@ func ScanFilesystem(ctx context.Context, targetPath string, quiet bool) (types.R
 
 // ScanFilesystemWithArgs uses the trivy CLI to scan a local filesystem path with custom arguments.
 func ScanFilesystemWithArgs(ctx context.Context, fsPath string, trivyArgs []string, quiet bool) (types.Report, error) {
-	return runTrivyCommand(ctx, trivyArgs...)
+	return runTrivyCommandWithArgs(ctx, trivyArgs, quiet)
 }
 
 // ScanImage uses the trivy CLI to scan a container image for vulnerabilities.
@@ -149,7 +149,7 @@ func ScanImage(ctx context.Context, imageName string, quiet bool) (types.Report,
 
 // ScanImageWithArgs uses the trivy CLI to scan a container image with custom arguments.
 func ScanImageWithArgs(ctx context.Context, imageName string, trivyArgs []string, quiet bool) (types.Report, error) {
-	return runTrivyCommand(ctx, trivyArgs...)
+	return runTrivyCommandWithArgs(ctx, trivyArgs, quiet)
 }
 
 // ScanRepository uses the trivy CLI to scan a Git repository for vulnerabilities.

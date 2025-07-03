@@ -1,7 +1,12 @@
 <!-- CI debug adımı testi için dummy değişiklik -->
 # BugZora 🔒
 
-A comprehensive security scanner for container images and filesystems, built on top of Trivy with enhanced reporting and policy enforcement capabilities.
+A comprehensive security scanner for container images and filesystems, built on top of Trivy with enhanced reporting, policy enforcement, and SBOM generation capabilities.
+
+[![CI/CD Pipeline](https://github.com/naimalpermuhacir/BugZora/workflows/CI%2FCD%20Pipeline/badge.svg)](https://github.com/naimalpermuhacir/BugZora/actions)
+[![Go Version](https://img.shields.io/badge/Go-1.22+-blue.svg)](https://golang.org)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Trivy](https://img.shields.io/badge/Trivy-0.63.0+-orange.svg)](https://github.com/aquasecurity/trivy)
 
 ## ✨ Features
 
@@ -9,237 +14,209 @@ A comprehensive security scanner for container images and filesystems, built on 
 - **Filesystem Analysis**: Security analysis of local filesystems
 - **Multiple Output Formats**: Table, JSON, PDF, CycloneDX, SPDX
 - **Policy Enforcement**: OPA/Rego-based security policies
-- **Comprehensive References**: OS-specific vulnerability links
+- **Comprehensive References**: OS-specific vulnerability links with color-coded output
 - **Docker Integration**: Optimized Docker images with multi-arch support
-- **SBOM Generation**: Software Bill of Materials in multiple formats
-- **Full Trivy CLI Support**: All Trivy parameters and options
+- **SBOM Generation**: Software Bill of Materials in multiple formats (CycloneDX, SPDX)
+- **SBOM Analytics**: Advanced analytics and insights from SBOM data
+- **SBOM Validation**: Validate SBOM files for compliance
+- **SBOM Comparison**: Compare two SBOM files for differences
+- **SBOM Merge**: Merge multiple SBOM files into one
+- **Enhanced Terminal Output**: Color-coded severity levels and reference links
+- **Optimized Table Display**: Clean, aligned tables with shortened reference links
+
+## 🎯 Demo Mode vs Licensed Version
+
+### 🆓 Demo Mode (Free)
+**Available Features:**
+- ✅ Real vulnerability scanning with Trivy
+- ✅ Container image scanning (alpine:latest, ubuntu:20.04, nginx:latest)
+- ✅ Filesystem scanning
+- ✅ Secret detection
+- ✅ License scanning
+- ✅ Repository scanning
+- ✅ SBOM generation (CycloneDX, SPDX)
+- ✅ Color-coded terminal output
+- ✅ Basic policy enforcement
+- ✅ JSON and table output formats
+
+**Demo Mode Limitations:**
+- 🔒 Only shows vulnerability counts and severity levels
+- 🔒 Detailed vulnerability information is hidden
+- 🔒 Full SBOM analytics are limited
+- 🔒 Advanced policy features are restricted
+- 🔒 "This is a demo result but reflects real data" message displayed
+
+**Demo Mode Examples:**
+```bash
+# Demo mode - shows only counts
+./bugzora image alpine:latest
+# Output: Found 5 vulnerabilities (2 HIGH, 3 MEDIUM)
+#         This is a demo result but reflects real data
+
+./bugzora fs /path/to/filesystem
+# Output: Found 12 secrets, 3 license issues
+#         This is a demo result but reflects real data
+```
+
+### 🔐 Licensed Version (Premium)
+**Full Features:**
+- ✅ Complete vulnerability details with CVE information
+- ✅ Full SBOM analytics and insights
+- ✅ Advanced policy enforcement with custom rules
+- ✅ Comprehensive reporting with PDF generation
+- ✅ SBOM comparison and merge capabilities
+- ✅ Detailed reference links and remediation guidance
+- ✅ Enterprise-grade security compliance
+- ✅ Priority support and updates
+- ✅ Custom integrations and APIs
+
+**Licensed Version Examples:**
+```bash
+# Licensed version - full details
+./bugzora image alpine:latest
+# Output: Complete vulnerability table with CVE details,
+#         reference links, and remediation guidance
+
+./bugzora analytics sbom.json
+# Output: Comprehensive SBOM analytics with dependency graphs,
+#         risk scoring, and trend analysis
+```
 
 ## 🚀 Quick Start
 
 ### Installation
 
 ```bash
-# Download latest release
-curl -L https://github.com/naimalpermuhacir/BugZora/releases/latest/download/bugzora_$(uname -s)_$(uname -m).tar.gz | tar -xz
-sudo mv bugzora /usr/local/bin/
+# Download and install
+curl -sSL https://raw.githubusercontent.com/naimalpermuhacir/BugZora/main/install.sh | bash
 
-# Or use Docker
-docker pull naimalpermuhacir/bugzora:latest
+# Or build from source
+git clone https://github.com/naimalpermuhacir/BugZora.git
+cd BugZora
+go build -o bugzora .
 ```
 
 ### Basic Usage
 
 ```bash
 # Scan a container image
-bugzora image alpine:latest
+./bugzora image alpine:latest
 
 # Scan a filesystem
-bugzora fs /path/to/filesystem
-
-# Generate JSON report
-bugzora image nginx:latest --format json
+./bugzora fs /path/to/filesystem
 
 # Generate SBOM
-bugzora image ubuntu:20.04 --format cyclonedx
+./bugzora sbom alpine:latest --format cyclonedx
+
+# Analyze SBOM
+./bugzora analytics sbom-file.json
+
+# Compare SBOMs
+./bugzora diff sbom1.json sbom2.json
 ```
 
-## 📋 Requirements
+## 📊 Enhanced Output Features
 
-- **Go 1.21+** (for development)
-- **Trivy CLI** (automatically installed in Docker)
-- **Docker** (optional, for containerized usage)
+### Color-Coded Severity Levels
+- **CRITICAL**: Red (bold)
+- **HIGH**: Red
+- **MEDIUM**: Yellow
+- **LOW**: Cyan
+- **UNKNOWN**: White
 
-## 🔧 Advanced Usage
+### Reference Links
+- OS-specific vulnerability links (Ubuntu, Debian, Alpine, Red Hat)
+- CVE database references (NVD, MITRE, CVE Details)
+- Color-coded reference links for better readability
+- Shortened link format to prevent table misalignment
+
+## 🔧 Advanced Features
 
 ### Policy Enforcement
-
 ```bash
-# Create default policy
-bugzora policy create policy.yaml
-
-# Scan with policy enforcement
-bugzora image alpine:latest --policy-file policy.yaml
+# Use custom policy file
+./bugzora image nginx:latest --policy-file policy.yaml
 ```
 
-### Multiple Output Formats
+### SBOM Operations
+```bash
+# Generate SBOM in different formats
+./bugzora sbom alpine:latest --format cyclonedx --output sbom.cdx
+./bugzora sbom alpine:latest --format spdx --output sbom.spdx
 
-   ```bash
-# JSON report
-bugzora image nginx:latest --format json --output report.json
+# Validate SBOM
+./bugzora validate sbom.cdx
 
-# PDF report
-bugzora image ubuntu:20.04 --format pdf
+# Merge multiple SBOMs
+./bugzora merge sbom1.json sbom2.json --output merged.json
 
-# CycloneDX SBOM
-bugzora fs /app --format cyclonedx
-
-# SPDX SBOM
-bugzora image alpine:latest --format spdx
+# Compare SBOMs
+./bugzora diff sbom1.json sbom2.json
 ```
 
-### Advanced Scanning Options
-
+### Analytics
 ```bash
-# Scan with specific severities
-bugzora image nginx:latest --severity HIGH,CRITICAL
-
-# Skip unfixed vulnerabilities
-bugzora fs /app --ignore-unfixed
-
-# Include all packages
-bugzora image alpine:latest --list-all-pkgs
-
-# Offline scanning
-bugzora fs /app --offline-scan
+# Generate comprehensive analytics
+./bugzora analytics sbom.json --output analytics.json
 ```
 
-## 🐳 Docker Usage
+## 📋 Output Formats
 
-### Quick Scan
+- **Table**: Enhanced terminal output with color coding
+- **JSON**: Structured vulnerability data
+- **PDF**: Comprehensive security reports
+- **CycloneDX**: Standard SBOM format
+- **SPDX**: Software Package Data Exchange format
 
-```bash
-# Scan image
-docker run --rm naimalpermuhacir/bugzora:latest image alpine:latest
-
-# Scan filesystem
-docker run --rm -v /path:/scan naimalpermuhacir/bugzora:latest fs /scan
-```
-
-### Production Usage
+## 🐳 Docker Support
 
 ```bash
+# Run with Docker
+docker run --rm -v $(pwd):/workspace naimalpermuhacir/bugzora:latest image alpine:latest
+
 # Build optimized image
-./build-docker.sh
-
-# Run security scan
-./docker-security-scan.sh naimalpermuhacir/bugzora:latest
+docker build -t bugzora .
 ```
 
-## 📊 Output Formats
+## 🔍 Reference Integration
 
-### Table Output (Default)
-```
-Report Summary
-┌─────────────┬──────┬─────────────────┬─────────┐
-│ Target      │ Type │ Vulnerabilities │ Secrets │
-├─────────────┼──────┼─────────────────┼─────────┤
-│ alpine:3.18 │ os   │ 5               │ -       │
-└─────────────┴──────┴─────────────────┴─────────┘
+BugZora provides comprehensive reference links for each vulnerability:
+- **Primary**: Direct vulnerability information
+- **OS-Specific**: Ubuntu, Debian, Alpine, Red Hat advisories
+- **CVE Databases**: NVD, MITRE, CVE Details
+- **Vendor Advisories**: Official security bulletins
 
---- Vulnerability Scan Report for: alpine:3.18 ---
-🎯 Target: alpine:3.18 (alpine)
+## 📈 Recent Improvements
 
-┌─────────────┬─────────────────┬──────────┬─────────────────┬─────────────┬─────────────────────────────────────┬─────────────────────────────────────┐
-│ Package     │ Vulnerability ID│ Severity │ Installed Ver.  │ Fixed Ver.  │ Title                               │ Reference                           │
-├─────────────┼─────────────────┼──────────┼─────────────────┼─────────────┼─────────────────────────────────────┼─────────────────────────────────────┤
-│ openssl     │ CVE-2023-5678   │ HIGH     │ 3.0.8-r0        │ 3.0.9-r0    │ OpenSSL vulnerability description   │ 🔍 Primary: https://avd.aquasec.com │
-└─────────────┴─────────────────┴──────────┴─────────────────┴─────────────┴─────────────────────────────────────┴─────────────────────────────────────┘
-```
-
-### JSON Output
-```json
-{
-  "scan_info": {
-    "scanner": "bugzora",
-    "version": "1.3.0",
-    "scan_time": "2024-01-15T10:30:00Z"
-  },
-  "results": [
-    {
-      "target": "alpine:3.18",
-      "type": "alpine",
-      "vulnerabilities": [...],
-  "summary": {
-    "critical": 0,
-        "high": 2,
-        "medium": 3,
-    "low": 0,
-    "unknown": 0,
-        "total": 5
-      }
-    }
-  ]
-}
-```
-
-### SBOM Output
-- **CycloneDX**: Industry-standard JSON format
-- **SPDX**: Tag-value format for compliance
-
-## 🔒 Security Features
-
-- **Non-root container execution**
-- **Minimal attack surface** with Alpine Linux
-- **Multi-stage builds** for smaller images
-- **Security scanning** of container images
-- **Policy-based enforcement**
-- **Comprehensive vulnerability references**
-
-## 🛠️ Development
-
-### Project Structure
-```
-BugZora/
-├── cmd/           # CLI commands
-├── pkg/           # Core packages
-│   ├── report/    # Reporting module
-│   ├── vuln/      # Vulnerability scanning
-│   └── policy/    # Policy enforcement
-├── db/            # Trivy database
-└── main.go        # Application entry
-```
-
-### Building from Source
-
-```bash
-# Clone repository
-git clone https://github.com/naimalpermuhacir/BugZora.git
-cd BugZora
-
-# Build binary
-go build -o bugzora .
-
-# Run tests
-go test ./...
-
-# Build Docker image
-./build-docker.sh
-```
-
-## 📚 Documentation
-
-- [Usage Guide](how_to_use.md) - Detailed usage instructions
-- [Docker Guide](DOCKER.md) - Docker usage and optimization
-- [Project State](PROJECT_STATE.md) - Current project status
+- ✅ Enhanced terminal output with color coding
+- ✅ Optimized table display with proper alignment
+- ✅ Shortened reference links to prevent table misalignment
+- ✅ Comprehensive SBOM support (CycloneDX, SPDX)
+- ✅ Advanced SBOM analytics and comparison
+- ✅ Policy enforcement with OPA/Rego
+- ✅ Multi-format output support
+- ✅ **CI/CD Pipeline Optimization**: Disk space management and cache optimization
+- ✅ **Code Quality**: Exported function and type documentation compliance
+- ✅ **Lint Compliance**: golint format compliance for all exported items
+- ✅ **Test Organization**: Centralized test artifacts in test-artifacts/ directory
+- ✅ **Git Ignore**: Proper test output file management
+- ✅ **Demo Mode**: Real scanning with limited output for free users
+- ✅ **Licensed Features**: Full functionality for premium users
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+2. Create a feature branch
 3. Make your changes
-4. Add tests if applicable
+4. Add tests
 5. Submit a pull request
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+## 🔗 Links
 
-For issues and questions:
-1. Check the [documentation](how_to_use.md)
-2. Search existing [GitHub Issues](https://github.com/naimalpermuhacir/BugZora/issues)
-3. Create a new issue with detailed information
-
-## 🔄 Changelog
-
-- **v1.3.0**: Full Trivy CLI support, SBOM generation, policy enforcement
-- **v1.2.0**: Docker optimizations, security hardening, multi-arch support
-- **v1.1.0**: Enhanced reporting, multiple reference systems
-- **v1.0.0**: Initial release with basic scanning capabilities
-
-## 🙏 Acknowledgments
-
-- [Trivy](https://github.com/aquasecurity/trivy) - The underlying scanning engine
-- [Cobra](https://github.com/spf13/cobra) - CLI framework
-- [Aqua Security](https://www.aquasec.com/) - Vulnerability database 
+- [Documentation](https://bugzora.dev/docs)
+- [Issues](https://github.com/naimalpermuhacir/BugZora/issues)
+- [Discussions](https://github.com/naimalpermuhacir/BugZora/discussions) 

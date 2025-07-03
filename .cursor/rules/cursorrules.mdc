@@ -1,0 +1,18 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+1. .cursor dosyasını ve alt dosyalarının tamamını gitignore a ekle
+2. .cursorrules dosyasını gitignore a ekle
+3. tüm proje için readme ve readme_tr isminde 2 dosya oluştur ve bu dosyaları readme için ingilizce, readme_tr için türkçe olarak güncelle
+4. kendin için bir dosya oluştur projenin her durumunu bu dosyaya kaydet bu dosyayı sadece kendin okuyup anlayacaksın ve devam etmek istediğimde bu dosyadan yaptığın her işlem/operasyon/güncelleme ve nerede kaldığımız ile ilgili işlemlere buradan devam et.
+5. her zaman türkçe yanıt ver
+6. yapay zeka ile geliştirildiğine dair yorum satırı ekleme var ise kaldır
+7. gereksiz yorum satırlarını kaldır ve yalnızca öncemli yorum satırları kalsın
+8. önemli olan kod parçacıkları hariç yorum satırı ekleme
+9. her yaptığımız yenilik ve güncelleme sonrasında uygulamanın her özelliğinin her komutun doğru çalışıp çalışmadığına emin olmalıyız testlerin tamamını gerçekleştir.
+10. her yaptığımız yenilik ve güncelleme sonrasında ve commit öncesinde testler başarılı olursa eğer todo, readme, how_to_use, project_state dosyalarının tamamını güncelle.
+11. var ise dockerfile ları güncelle
+12. var ise pipeline/yml dosyalarını güncelle
+13. 

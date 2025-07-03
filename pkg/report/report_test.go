@@ -1,34 +1,110 @@
 package report
 
 import (
-	"os"
 	"testing"
+	"github.com/aquasecurity/trivy/pkg/types"
 )
 
-func TestWriteResultsInvalidFormat(t *testing.T) {
-	// Test invalid format
-	err := WriteResults(nil, "invalid", "test-target")
-	if err == nil {
-		t.Error("WriteResults should fail with invalid format")
+func TestGenerateTableReport(t *testing.T) {
+	// Test report oluştur
+	report := types.Report{
+		Results: []types.Result{
+			{
+				Target: "test-target",
+				Vulnerabilities: []types.DetectedVulnerability{
+					{
+						VulnerabilityID: "CVE-2023-1234",
+						PkgName:         "test-package",
+					},
+				},
+			},
+		},
+	}
+
+	// Table report test et
+	result, err := GenerateTableReport(report, "table")
+	if err != nil {
+		t.Fatalf("GenerateTableReport failed: %v", err)
+	}
+
+	if result == "" {
+		t.Error("Expected non-empty table report")
 	}
 }
 
-func TestWriteResultsTableFormat(t *testing.T) {
-	// Test table format (should not create file)
-	err := WriteResults(nil, "table", "test-target")
+func TestGenerateJSONReport(t *testing.T) {
+	// Test report oluştur
+	report := types.Report{
+		Results: []types.Result{
+			{
+				Target: "test-target",
+				Vulnerabilities: []types.DetectedVulnerability{
+					{
+						VulnerabilityID: "CVE-2023-1234",
+						PkgName:         "test-package",
+					},
+				},
+			},
+		},
+	}
+
+	// JSON report test et
+	result, err := GenerateJSONReport(report)
 	if err != nil {
-		t.Errorf("WriteResults table format failed: %v", err)
+		t.Fatalf("GenerateJSONReport failed: %v", err)
+	}
+
+	if result == "" {
+		t.Error("Expected non-empty JSON report")
 	}
 }
 
-func TestWriteResultsEmptyResults(t *testing.T) {
-	// Test with empty results
-	err := WriteResults(nil, "json", "test-target")
-	if err != nil {
-		t.Errorf("WriteResults with empty results failed: %v", err)
+func TestGeneratePDFReport(t *testing.T) {
+	// Test report oluştur
+	report := types.Report{
+		Results: []types.Result{
+			{
+				Target: "test-target",
+				Vulnerabilities: []types.DetectedVulnerability{
+					{
+						VulnerabilityID: "CVE-2023-1234",
+						PkgName:         "test-package",
+					},
+				},
+			},
+		},
 	}
 
-	// Clean up if file was created
-	os.Remove("report-test-target.json")
-	os.Remove("report-test-target.pdf")
+	// PDF report test et
+	err := GeneratePDFReport(report, "test-report.pdf")
+	if err != nil {
+		t.Fatalf("GeneratePDFReport failed: %v", err)
+	}
+}
+
+func TestGenerateSBOMReport(t *testing.T) {
+	// Test report oluştur
+	report := types.Report{
+		Results: []types.Result{
+			{
+				Target: "test-target",
+				Vulnerabilities: []types.DetectedVulnerability{
+					{
+						VulnerabilityID: "CVE-2023-1234",
+						PkgName:         "test-package",
+					},
+				},
+			},
+		},
+	}
+
+	// SBOM report test et
+	result, err := GenerateSBOMReport(report, "cyclonedx")
+	if err != nil {
+		t.Fatalf("GenerateSBOMReport failed: %v", err)
+	}
+
+	if result == "" {
+		t.Error("Expected non-empty SBOM report")
+	}
 }

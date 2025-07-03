@@ -1,6 +1,8 @@
 package cmd
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func buildTrivyArgs(command, target string) []string {
 	args := []string{command, target}

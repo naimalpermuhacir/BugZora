@@ -1,0 +1,302 @@
+SPDXVersion: SPDX-2.3
+DataLicense: CC0-1.0
+SPDXID: SPDXRef-DOCUMENT
+DocumentName: alpine:latest
+DocumentNamespace: http://trivy.dev/container_image/alpine:latest-d152dc08-68af-434d-93fd-185627858f15
+Creator: Organization: aquasecurity
+Creator: Tool: trivy-0.62.1
+Created: 2025-07-03T08:03:08Z
+
+##### Package: alpine:latest
+
+PackageName: alpine:latest
+SPDXID: SPDXRef-ContainerImage-56c2d78c4593fea3
+PackageDownloadLocation: NONE
+PrimaryPackagePurpose: CONTAINER
+FilesAnalyzed: false
+ExternalRef: PACKAGE-MANAGER purl pkg:oci/alpine@sha256%3A8a1f59ffb675680d47db6337b49d22281a139e9d709335b492be023728e11715?arch=amd64&repository_url=index.docker.io%2Flibrary%2Falpine
+
+##### Package: alpine
+
+PackageName: alpine
+SPDXID: SPDXRef-OperatingSystem-4f0c0b367b819c1f
+PackageVersion: 3.22.0
+PackageDownloadLocation: NONE
+PrimaryPackagePurpose: OPERATING-SYSTEM
+FilesAnalyzed: false
+
+##### Package: libssl3
+
+PackageName: libssl3
+SPDXID: SPDXRef-Package-1b747c54075d0e0
+PackageVersion: 3.5.0-r0
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: NONE
+PrimaryPackagePurpose: LIBRARY
+FilesAnalyzed: false
+PackageChecksum: SHA1: 8282bdd4fed1379f22e199f05aefd3d50a10e49b
+PackageSourceInfo: built package from: openssl 3.5.0-r0
+PackageLicenseConcluded: Apache-2.0
+PackageLicenseDeclared: Apache-2.0
+ExternalRef: PACKAGE-MANAGER purl pkg:apk/alpine/libssl3@3.5.0-r0?arch=x86_64&distro=3.22.0
+
+##### Package: busybox-binsh
+
+PackageName: busybox-binsh
+SPDXID: SPDXRef-Package-245681559c75ce86
+PackageVersion: 1.37.0-r18
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: NONE
+PrimaryPackagePurpose: LIBRARY
+FilesAnalyzed: false
+PackageChecksum: SHA1: 4bcdab5f9122afb4de71bfe8b1125c0c02796793
+PackageSourceInfo: built package from: busybox 1.37.0-r18
+PackageLicenseConcluded: GPL-2.0-only
+PackageLicenseDeclared: GPL-2.0-only
+ExternalRef: PACKAGE-MANAGER purl pkg:apk/alpine/busybox-binsh@1.37.0-r18?arch=x86_64&distro=3.22.0
+
+##### Package: alpine-baselayout
+
+PackageName: alpine-baselayout
+SPDXID: SPDXRef-Package-3269103fd6e30e72
+PackageVersion: 3.7.0-r0
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: NONE
+PrimaryPackagePurpose: LIBRARY
+FilesAnalyzed: false
+PackageChecksum: SHA1: 29f99748eea1ffe01f70b34024dc45c46d211f8d
+PackageSourceInfo: built package from: alpine-baselayout 3.7.0-r0
+PackageLicenseConcluded: GPL-2.0-only
+PackageLicenseDeclared: GPL-2.0-only
+ExternalRef: PACKAGE-MANAGER purl pkg:apk/alpine/alpine-baselayout@3.7.0-r0?arch=x86_64&distro=3.22.0
+
+##### Package: ca-certificates-bundle
+
+PackageName: ca-certificates-bundle
+SPDXID: SPDXRef-Package-342ba4ee217b3e30
+PackageVersion: 20241121-r2
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: NONE
+PrimaryPackagePurpose: LIBRARY
+FilesAnalyzed: false
+PackageChecksum: SHA1: 9d2aaa4ca9f2446fc14264d515907f2e024fafab
+PackageSourceInfo: built package from: ca-certificates 20241121-r2
+PackageLicenseConcluded: MPL-2.0 AND MIT
+PackageLicenseDeclared: MPL-2.0 AND MIT
+ExternalRef: PACKAGE-MANAGER purl pkg:apk/alpine/ca-certificates-bundle@20241121-r2?arch=x86_64&distro=3.22.0
+
+##### Package: apk-tools
+
+PackageName: apk-tools
+SPDXID: SPDXRef-Package-4e3241906a2289b0
+PackageVersion: 2.14.9-r2
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: NONE
+PrimaryPackagePurpose: LIBRARY
+FilesAnalyzed: false
+PackageChecksum: SHA1: 2a8910d00ac31df2e1ccd94127488ea3a06e2d48
+PackageSourceInfo: built package from: apk-tools 2.14.9-r2
+PackageLicenseConcluded: GPL-2.0-only
+PackageLicenseDeclared: GPL-2.0-only
+ExternalRef: PACKAGE-MANAGER purl pkg:apk/alpine/apk-tools@2.14.9-r2?arch=x86_64&distro=3.22.0
+
+##### Package: musl
+
+PackageName: musl
+SPDXID: SPDXRef-Package-626759b524f45c8a
+PackageVersion: 1.2.5-r10
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: NONE
+PrimaryPackagePurpose: LIBRARY
+FilesAnalyzed: false
+PackageChecksum: SHA1: 59283b61db830a0a0309c98f4db906a2d8fa342b
+PackageSourceInfo: built package from: musl 1.2.5-r10
+PackageLicenseConcluded: MIT
+PackageLicenseDeclared: MIT
+ExternalRef: PACKAGE-MANAGER purl pkg:apk/alpine/musl@1.2.5-r10?arch=x86_64&distro=3.22.0
+
+##### Package: zlib
+
+PackageName: zlib
+SPDXID: SPDXRef-Package-65e1345ea692e5e9
+PackageVersion: 1.3.1-r2
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: NONE
+PrimaryPackagePurpose: LIBRARY
+FilesAnalyzed: false
+PackageChecksum: SHA1: bf7d90d89e5429c18167b91ab8d7e6256cfc7fdf
+PackageSourceInfo: built package from: zlib 1.3.1-r2
+PackageLicenseConcluded: Zlib
+PackageLicenseDeclared: Zlib
+ExternalRef: PACKAGE-MANAGER purl pkg:apk/alpine/zlib@1.3.1-r2?arch=x86_64&distro=3.22.0
+
+##### Package: alpine-release
+
+PackageName: alpine-release
+SPDXID: SPDXRef-Package-6a4483ca65268bef
+PackageVersion: 3.22.0-r0
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: NONE
+PrimaryPackagePurpose: LIBRARY
+FilesAnalyzed: false
+PackageChecksum: SHA1: cf85a5b0d8654cc10db1058c8c13f521729d5dfd
+PackageSourceInfo: built package from: alpine-base 3.22.0-r0
+PackageLicenseConcluded: MIT
+PackageLicenseDeclared: MIT
+ExternalRef: PACKAGE-MANAGER purl pkg:apk/alpine/alpine-release@3.22.0-r0?arch=x86_64&distro=3.22.0
+
+##### Package: ssl_client
+
+PackageName: ssl_client
+SPDXID: SPDXRef-Package-7aa8b51fe357f3cb
+PackageVersion: 1.37.0-r18
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: NONE
+PrimaryPackagePurpose: LIBRARY
+FilesAnalyzed: false
+PackageChecksum: SHA1: 7fa2e0f5a78d7061d18653bc5e38cb83c42d2f3a
+PackageSourceInfo: built package from: busybox 1.37.0-r18
+PackageLicenseConcluded: GPL-2.0-only
+PackageLicenseDeclared: GPL-2.0-only
+ExternalRef: PACKAGE-MANAGER purl pkg:apk/alpine/ssl_client@1.37.0-r18?arch=x86_64&distro=3.22.0
+
+##### Package: busybox
+
+PackageName: busybox
+SPDXID: SPDXRef-Package-88f85fb83271159b
+PackageVersion: 1.37.0-r18
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: NONE
+PrimaryPackagePurpose: LIBRARY
+FilesAnalyzed: false
+PackageChecksum: SHA1: 21558d4968f31dcc377c0f27dae9bb0f32bb25d2
+PackageSourceInfo: built package from: busybox 1.37.0-r18
+PackageLicenseConcluded: GPL-2.0-only
+PackageLicenseDeclared: GPL-2.0-only
+ExternalRef: PACKAGE-MANAGER purl pkg:apk/alpine/busybox@1.37.0-r18?arch=x86_64&distro=3.22.0
+
+##### Package: alpine-keys
+
+PackageName: alpine-keys
+SPDXID: SPDXRef-Package-a567a7d4d0396ab4
+PackageVersion: 2.5-r0
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: NONE
+PrimaryPackagePurpose: LIBRARY
+FilesAnalyzed: false
+PackageChecksum: SHA1: b175e48144ebad03d6ba11d45b25aafc2de310c1
+PackageSourceInfo: built package from: alpine-keys 2.5-r0
+PackageLicenseConcluded: MIT
+PackageLicenseDeclared: MIT
+ExternalRef: PACKAGE-MANAGER purl pkg:apk/alpine/alpine-keys@2.5-r0?arch=x86_64&distro=3.22.0
+
+##### Package: alpine-baselayout-data
+
+PackageName: alpine-baselayout-data
+SPDXID: SPDXRef-Package-bdfa36ae234a65e5
+PackageVersion: 3.7.0-r0
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: NONE
+PrimaryPackagePurpose: LIBRARY
+FilesAnalyzed: false
+PackageChecksum: SHA1: 73f5ef65f8333a1784102df973c076d5a7d5b5fe
+PackageSourceInfo: built package from: alpine-baselayout 3.7.0-r0
+PackageLicenseConcluded: GPL-2.0-only
+PackageLicenseDeclared: GPL-2.0-only
+ExternalRef: PACKAGE-MANAGER purl pkg:apk/alpine/alpine-baselayout-data@3.7.0-r0?arch=x86_64&distro=3.22.0
+
+##### Package: libcrypto3
+
+PackageName: libcrypto3
+SPDXID: SPDXRef-Package-e08e6950c13705b6
+PackageVersion: 3.5.0-r0
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: NONE
+PrimaryPackagePurpose: LIBRARY
+FilesAnalyzed: false
+PackageChecksum: SHA1: 3749edc5c03dedec613b9e2ee94740249dab2754
+PackageSourceInfo: built package from: openssl 3.5.0-r0
+PackageLicenseConcluded: Apache-2.0
+PackageLicenseDeclared: Apache-2.0
+ExternalRef: PACKAGE-MANAGER purl pkg:apk/alpine/libcrypto3@3.5.0-r0?arch=x86_64&distro=3.22.0
+
+##### Package: scanelf
+
+PackageName: scanelf
+SPDXID: SPDXRef-Package-f64171e9056d2f0
+PackageVersion: 1.3.8-r1
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: NONE
+PrimaryPackagePurpose: LIBRARY
+FilesAnalyzed: false
+PackageChecksum: SHA1: bd6dd1c820d476bcdf8ee38f003bcf2a73323b13
+PackageSourceInfo: built package from: pax-utils 1.3.8-r1
+PackageLicenseConcluded: GPL-2.0-only
+PackageLicenseDeclared: GPL-2.0-only
+ExternalRef: PACKAGE-MANAGER purl pkg:apk/alpine/scanelf@1.3.8-r1?arch=x86_64&distro=3.22.0
+
+##### Package: musl-utils
+
+PackageName: musl-utils
+SPDXID: SPDXRef-Package-f70a1a7d807177cd
+PackageVersion: 1.2.5-r10
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: NONE
+PrimaryPackagePurpose: LIBRARY
+FilesAnalyzed: false
+PackageChecksum: SHA1: 7e60d0820813baa8ac266bee158394c0a69f104a
+PackageSourceInfo: built package from: musl 1.2.5-r10
+PackageLicenseConcluded: MIT AND BSD-2-Clause AND GPL-2.0-or-later
+PackageLicenseDeclared: MIT AND BSD-2-Clause AND GPL-2.0-or-later
+ExternalRef: PACKAGE-MANAGER purl pkg:apk/alpine/musl-utils@1.2.5-r10?arch=x86_64&distro=3.22.0
+
+##### Package: libapk2
+
+PackageName: libapk2
+SPDXID: SPDXRef-Package-fe1ee48e22618b87
+PackageVersion: 2.14.9-r2
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: NONE
+PrimaryPackagePurpose: LIBRARY
+FilesAnalyzed: false
+PackageChecksum: SHA1: d3a20797fcda1b5742c119ffc146c1e110ed418e
+PackageSourceInfo: built package from: apk-tools 2.14.9-r2
+PackageLicenseConcluded: GPL-2.0-only
+PackageLicenseDeclared: GPL-2.0-only
+ExternalRef: PACKAGE-MANAGER purl pkg:apk/alpine/libapk2@2.14.9-r2?arch=x86_64&distro=3.22.0
+
+##### Relationships
+
+Relationship: SPDXRef-ContainerImage-56c2d78c4593fea3 CONTAINS SPDXRef-OperatingSystem-4f0c0b367b819c1f
+Relationship: SPDXRef-DOCUMENT DESCRIBES SPDXRef-ContainerImage-56c2d78c4593fea3
+Relationship: SPDXRef-OperatingSystem-4f0c0b367b819c1f CONTAINS SPDXRef-Package-3269103fd6e30e72
+Relationship: SPDXRef-OperatingSystem-4f0c0b367b819c1f CONTAINS SPDXRef-Package-4e3241906a2289b0
+Relationship: SPDXRef-OperatingSystem-4f0c0b367b819c1f CONTAINS SPDXRef-Package-6a4483ca65268bef
+Relationship: SPDXRef-OperatingSystem-4f0c0b367b819c1f CONTAINS SPDXRef-Package-7aa8b51fe357f3cb
+Relationship: SPDXRef-OperatingSystem-4f0c0b367b819c1f CONTAINS SPDXRef-Package-f70a1a7d807177cd
+Relationship: SPDXRef-Package-1b747c54075d0e0 DEPENDS_ON SPDXRef-Package-626759b524f45c8a
+Relationship: SPDXRef-Package-1b747c54075d0e0 DEPENDS_ON SPDXRef-Package-e08e6950c13705b6
+Relationship: SPDXRef-Package-245681559c75ce86 DEPENDS_ON SPDXRef-Package-88f85fb83271159b
+Relationship: SPDXRef-Package-3269103fd6e30e72 DEPENDS_ON SPDXRef-Package-245681559c75ce86
+Relationship: SPDXRef-Package-3269103fd6e30e72 DEPENDS_ON SPDXRef-Package-bdfa36ae234a65e5
+Relationship: SPDXRef-Package-4e3241906a2289b0 DEPENDS_ON SPDXRef-Package-342ba4ee217b3e30
+Relationship: SPDXRef-Package-4e3241906a2289b0 DEPENDS_ON SPDXRef-Package-626759b524f45c8a
+Relationship: SPDXRef-Package-4e3241906a2289b0 DEPENDS_ON SPDXRef-Package-65e1345ea692e5e9
+Relationship: SPDXRef-Package-4e3241906a2289b0 DEPENDS_ON SPDXRef-Package-e08e6950c13705b6
+Relationship: SPDXRef-Package-4e3241906a2289b0 DEPENDS_ON SPDXRef-Package-fe1ee48e22618b87
+Relationship: SPDXRef-Package-65e1345ea692e5e9 DEPENDS_ON SPDXRef-Package-626759b524f45c8a
+Relationship: SPDXRef-Package-6a4483ca65268bef DEPENDS_ON SPDXRef-Package-a567a7d4d0396ab4
+Relationship: SPDXRef-Package-7aa8b51fe357f3cb DEPENDS_ON SPDXRef-Package-1b747c54075d0e0
+Relationship: SPDXRef-Package-7aa8b51fe357f3cb DEPENDS_ON SPDXRef-Package-626759b524f45c8a
+Relationship: SPDXRef-Package-7aa8b51fe357f3cb DEPENDS_ON SPDXRef-Package-e08e6950c13705b6
+Relationship: SPDXRef-Package-88f85fb83271159b DEPENDS_ON SPDXRef-Package-626759b524f45c8a
+Relationship: SPDXRef-Package-e08e6950c13705b6 DEPENDS_ON SPDXRef-Package-626759b524f45c8a
+Relationship: SPDXRef-Package-f64171e9056d2f0 DEPENDS_ON SPDXRef-Package-626759b524f45c8a
+Relationship: SPDXRef-Package-f70a1a7d807177cd DEPENDS_ON SPDXRef-Package-626759b524f45c8a
+Relationship: SPDXRef-Package-f70a1a7d807177cd DEPENDS_ON SPDXRef-Package-f64171e9056d2f0
+Relationship: SPDXRef-Package-fe1ee48e22618b87 DEPENDS_ON SPDXRef-Package-1b747c54075d0e0
+Relationship: SPDXRef-Package-fe1ee48e22618b87 DEPENDS_ON SPDXRef-Package-342ba4ee217b3e30
+Relationship: SPDXRef-Package-fe1ee48e22618b87 DEPENDS_ON SPDXRef-Package-626759b524f45c8a
+Relationship: SPDXRef-Package-fe1ee48e22618b87 DEPENDS_ON SPDXRef-Package-65e1345ea692e5e9
+Relationship: SPDXRef-Package-fe1ee48e22618b87 DEPENDS_ON SPDXRef-Package-e08e6950c13705b6
+
