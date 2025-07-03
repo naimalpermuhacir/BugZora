@@ -5,7 +5,6 @@ go 1.21
 require (
 	github.com/aquasecurity/trivy v0.50.1
 	github.com/fatih/color v1.16.0
-	github.com/jung-kurt/gofpdf v1.16.2
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/spf13/cobra v1.8.0
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2
@@ -25,5 +24,4 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	golang.org/x/exp v0.0.0-20231110203233-9a3e6036ecaa // indirect
 	golang.org/x/sys v0.17.0 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
