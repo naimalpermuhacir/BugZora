@@ -2,11 +2,11 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ master, staging, release/*, alpermuhacir/* ]
+    branches: [ master, staging, release/*, alpermuhacir/*, UAT ]
     tags:
       - '*'
   pull_request:
-    branches: [ master, staging, release/*, alpermuhacir/* ]
+    branches: [ master, staging, release/*, alpermuhacir/*, UAT ]
   release:
     types: [ published ]
 
