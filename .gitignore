@@ -32,6 +32,11 @@ dist/
 *.swo
 *~
 
+# Cursor IDE files
+.cursor/
+.cursorrules
+.cursorrules.md
+
 # OS generated files
 .DS_Store
 .DS_Store?
