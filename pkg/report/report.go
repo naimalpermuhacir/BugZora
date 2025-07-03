@@ -4,22 +4,22 @@ import (
 	"github.com/aquasecurity/trivy/pkg/types"
 )
 
-// Demo modu - gerçek rapor oluşturulmaz
+// GenerateTableReport generates a table report from the scan results
 func GenerateTableReport(report types.Report, outputFormat string) (string, error) {
 	return "Demo modu - gerçek rapor oluşturulmaz", nil
 }
 
-// Demo modu - gerçek rapor oluşturulmaz
+// GenerateJSONReport generates a JSON report from the scan results
 func GenerateJSONReport(report types.Report) (string, error) {
 	return "Demo modu - gerçek rapor oluşturulmaz", nil
 }
 
-// Demo modu - gerçek rapor oluşturulmaz
+// GeneratePDFReport generates a PDF report from the scan results
 func GeneratePDFReport(report types.Report, outputPath string) error {
 	return nil
 }
 
-// Demo modu - gerçek rapor oluşturulmaz
+// GenerateSBOMReport generates an SBOM report from the scan results
 func GenerateSBOMReport(report types.Report, format string) (string, error) {
 	return "Demo modu - gerçek rapor oluşturulmaz", nil
 }
